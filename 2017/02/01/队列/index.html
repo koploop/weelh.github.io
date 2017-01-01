@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="iOS Developer">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  <title>
+    
+      GCD in Swift3 | Mario&#39;s Space
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+</head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Mario's Space</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>GCD in Swift3</h2>
+  <p class="post-date">2017-02-01</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body">
+  <article class="post-article">
+    <section class="markdown-content"><p>今天,我们重新使用 Swift 来复习一遍 GCD 的基本用法. 当然,它适合像我这样由Objective-C转入Swift的入门者,也同样适用iOS入门者,毕竟,很多人现在依然搞不清队列,线程和任务的区别呢. </p>
+<h2 id="创建串行与并行队列"><a href="#创建串行与并行队列" class="headerlink" title="创建串行与并行队列"></a>创建串行与并行队列</h2><p>使用<code>GCD</code>创建一个队列: </p>
+<p>Objective-C</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// Objective-C</div><div class="line">dispatch_queue_create(const char *label, dispatch_queue_attr_t attr)</div><div class="line">/*</div><div class="line"> * 该函数有两个参数</div><div class="line"> * label, 用来标识队列名称</div><div class="line"> * attr, 用来标识队列属性,其中,DISPATCH_QUEUE_SERIAL(NULL) 代表[串行队列],</div><div class="line"> * DISPATCH_QUEUE_CONCURRENT代表[并行队列]</div><div class="line">*/</div><div class="line"></div><div class="line">// 创建一个串行队列</div><div class="line">dispath_queue_t serQueue = dispath_queue_create(&quot;com.serial.queue&quot;, NULL)  </div><div class="line">// 创建一个并行队列</div><div class="line">dispath_queue_t conQueue = dispath_queue_create(&quot;com.concurrent.queue&quot;, DISPATH_QUEUE_CONCURRENT)</div></pre></td></tr></table></figure>
+<p>Swift</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Swift</span></div><div class="line"><span class="type">DispatchQueue</span>(label: , qos: , attributes: , autoreleaseFrequency: , target: )</div><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment"> * 上面是初始化一个队列的时候Xcode会提示的初始化方法</span></div><div class="line"><span class="comment"> * 事实上,初始化方法中的五个参数并不是都需要的,当创建一个串行队列的时候,我们只需要一个参数label.</span></div><div class="line"><span class="comment"> * 而要指定为并行队列的时候,我们只需加上一个attributes参数即可,其他参数我们这里不做详解😁</span></div><div class="line"><span class="comment"> */</span></div><div class="line"></div><div class="line"><span class="comment">// 创建一个串行队列</span></div><div class="line"><span class="keyword">let</span> serial_queue = <span class="type">DispatchQueue</span>(label: <span class="string">"com.serial.queue"</span>)</div><div class="line"><span class="comment">// 创建一个并行队列</span></div><div class="line"><span class="keyword">let</span> concurrent_queue = <span class="type">DispatchQueue</span>(label: <span class="string">"com.concurrent.queue"</span>, attributes: .concurrent)</div></pre></td></tr></table></figure>
+<h2 id="全局并行队列"><a href="#全局并行队列" class="headerlink" title="全局并行队列"></a>全局并行队列</h2><p>通常,当我们需要将任务放入一个并行队列中的时候,我们就使用全局的并行队列而不用自己再手动创建.</p>
+<p>获取一个全局队列: </p>
+<p>Objective-C</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// Objective-C</div><div class="line">dispatch_get_global_queue(long identifier, unsigned long flags).</div><div class="line">/*</div><div class="line"> * identifier: 代表线程优先级,通常传0, 即default即可,其余还有 高/低/后台 三个级别</div><div class="line"> * flags: 预留参数, 传0即可</div><div class="line"> */</div></pre></td></tr></table></figure>
+<p>Swift</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 获取全局队列</span></div><div class="line"><span class="keyword">let</span> globe_queue = <span class="type">DispatchQueue</span>.global()</div><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment"> * 事实上,大多数时候都不需要我们自己手动创建队列.系统给我们提供了全局队列</span></div><div class="line"><span class="comment"> * 你照样可以指定全局队列的一些属性.</span></div><div class="line"><span class="comment"> * let globe_queue = DispatchQueue.global(qos: .userInitiated)</span></div><div class="line"><span class="comment"> */</span></div><div class="line"></div><div class="line"><span class="comment">// 获取主队列</span></div><div class="line"><span class="keyword">let</span> main_queue = <span class="type">DispatchQueue</span>.main</div></pre></td></tr></table></figure>
+<h2 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h2><p>我们这里使用Swift来分析队列和线程.</p>
+<h4 id="全局队列-异步任务"><a href="#全局队列-异步任务" class="headerlink" title="全局队列 + 异步任务"></a>全局队列 + 异步任务</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">print</span>(<span class="string">"Begin Here"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">5</span> &#123;</div><div class="line">    globe_queue.async &#123;</div><div class="line">        sleep(<span class="type">UInt32</span>(<span class="number">0.8</span>))</div><div class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current, i)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="built_in">print</span>(<span class="string">"End Here"</span>)</div></pre></td></tr></table></figure>
+<p>控制台打印如下, 可以看到 <strong>开了多个线程,异步执行,互相不干扰,执行顺序其实也是不定的</strong>.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Begin Here</div><div class="line">&lt;NSThread: 0x6000002603c0&gt;&#123;number = 4, name = (null)&#125; 0</div><div class="line">&lt;NSThread: 0x600000261700&gt;&#123;number = 5, name = (null)&#125; 1</div><div class="line">&lt;NSThread: 0x6000002603c0&gt;&#123;number = 4, name = (null)&#125; 2</div><div class="line">&lt;NSThread: 0x6000002603c0&gt;&#123;number = 4, name = (null)&#125; 3</div><div class="line">End Here</div><div class="line">&lt;NSThread: 0x600000261700&gt;&#123;number = 5, name = (null)&#125; 4</div></pre></td></tr></table></figure>
+<h4 id="全局队列-同步任务"><a href="#全局队列-同步任务" class="headerlink" title="全局队列 + 同步任务"></a>全局队列 + 同步任务</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">print</span>(<span class="string">"Begin Here"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">5</span> &#123;</div><div class="line">    globe_queue.sync &#123;</div><div class="line">        sleep(<span class="type">UInt32</span>(<span class="number">0.8</span>))</div><div class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current, i)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="built_in">print</span>(<span class="string">"End Here"</span>)</div></pre></td></tr></table></figure>
+<p>Console log: <strong>所有的打印都在主线程,即便它处在一个并行队列中.</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Begin Here</div><div class="line">&lt;NSThread: 0x600000066780&gt;&#123;number = 1, name = main&#125; 0</div><div class="line">&lt;NSThread: 0x600000066780&gt;&#123;number = 1, name = main&#125; 1</div><div class="line">&lt;NSThread: 0x600000066780&gt;&#123;number = 1, name = main&#125; 2</div><div class="line">&lt;NSThread: 0x600000066780&gt;&#123;number = 1, name = main&#125; 3</div><div class="line">&lt;NSThread: 0x600000066780&gt;&#123;number = 1, name = main&#125; 4</div><div class="line">End Here</div></pre></td></tr></table></figure>
+<h4 id="串行队列-异步任务"><a href="#串行队列-异步任务" class="headerlink" title="串行队列 + 异步任务"></a>串行队列 + 异步任务</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">print</span>(<span class="string">"Begin Here"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">5</span> &#123;</div><div class="line">    serial_queue.async &#123;</div><div class="line">        sleep(<span class="type">UInt32</span>(<span class="number">0.8</span>))</div><div class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current, i)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="built_in">print</span>(<span class="string">"End Here"</span>)</div></pre></td></tr></table></figure>
+<p>Console log:  <strong>可以看到系统只额外开了一个线程去执行异步的任务,当然这时候异步就不真正意义上的异步了,是依据FIFO的顺序打印i的,这时候它和同步的区别就是它并不会阻塞主线程.</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Begin Here</div><div class="line">End Here</div><div class="line">&lt;NSThread: 0x60000006fc40&gt;&#123;number = 4, name = (null)&#125; 0</div><div class="line">&lt;NSThread: 0x60000006fc40&gt;&#123;number = 4, name = (null)&#125; 1</div><div class="line">&lt;NSThread: 0x60000006fc40&gt;&#123;number = 4, name = (null)&#125; 2</div><div class="line">&lt;NSThread: 0x60000006fc40&gt;&#123;number = 4, name = (null)&#125; 3</div><div class="line">&lt;NSThread: 0x60000006fc40&gt;&#123;number = 4, name = (null)&#125; 4</div></pre></td></tr></table></figure>
+<h4 id="串行队列-同步任务"><a href="#串行队列-同步任务" class="headerlink" title="串行队列 + 同步任务"></a>串行队列 + 同步任务</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">print</span>(<span class="string">"Begin Here"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">5</span> &#123;</div><div class="line">    serial_queue.sync &#123;</div><div class="line">        sleep(<span class="type">UInt32</span>(<span class="number">0.8</span>))</div><div class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current, i)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="built_in">print</span>(<span class="string">"End Here"</span>)</div></pre></td></tr></table></figure>
+<p>Console log:  <strong>所有的打印都在主线程,End Here最后打印, 因为同步任务阻塞了主线程</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Begin Here</div><div class="line"> &lt;NSThread: 0x600000261180&gt;&#123;number = 1, name = main&#125; 0</div><div class="line"> &lt;NSThread: 0x600000261180&gt;&#123;number = 1, name = main&#125; 1</div><div class="line"> &lt;NSThread: 0x600000261180&gt;&#123;number = 1, name = main&#125; 2</div><div class="line"> &lt;NSThread: 0x600000261180&gt;&#123;number = 1, name = main&#125; 3</div><div class="line"> &lt;NSThread: 0x600000261180&gt;&#123;number = 1, name = main&#125; 4</div><div class="line"> End Here</div></pre></td></tr></table></figure>
+<h4 id="并行队列-异步任务"><a href="#并行队列-异步任务" class="headerlink" title="并行队列 + 异步任务"></a>并行队列 + 异步任务</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">print</span>(<span class="string">"Begin Here"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">10</span> &#123;</div><div class="line">    concurrent_queue.async &#123;</div><div class="line">        sleep(<span class="type">UInt32</span>(<span class="number">0.8</span>))</div><div class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current, i)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="built_in">print</span>(<span class="string">"End Here"</span>)</div></pre></td></tr></table></figure>
+<p>Console log: <strong>其实和全局的并行队列一样, 任务被分配到多个合适的线程,随机顺序打印</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;NSThread: 0x604000075040&gt;&#123;number = 5, name = (null)&#125; 1</div><div class="line">&lt;NSThread: 0x600000074d40&gt;&#123;number = 4, name = (null)&#125; 0</div><div class="line">&lt;NSThread: 0x604000074d40&gt;&#123;number = 6, name = (null)&#125; 2</div><div class="line">&lt;NSThread: 0x604000074d40&gt;&#123;number = 6, name = (null)&#125; 3</div><div class="line"> End Here</div><div class="line">&lt;NSThread: 0x604000074d40&gt;&#123;number = 6, name = (null)&#125; 4</div></pre></td></tr></table></figure>
+<h4 id="并行队列-同步任务"><a href="#并行队列-同步任务" class="headerlink" title="并行队列 + 同步任务"></a>并行队列 + 同步任务</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">print</span>(<span class="string">"Begin Here"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">5</span> &#123;</div><div class="line">    concurrent_queue.sync &#123;</div><div class="line">        sleep(<span class="type">UInt32</span>(<span class="number">0.8</span>))</div><div class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current, i)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="built_in">print</span>(<span class="string">"End Here"</span>)</div></pre></td></tr></table></figure>
+<p>Console log:  <strong>可以发现即便是并行队列,但只要是同步任务,都将会在主线程执行,并阻塞主线程,和第一个例子总的全局队列一致.</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Begin Here</div><div class="line">&lt;NSThread: 0x60400006c080&gt;&#123;number = 1, name = main&#125; 0</div><div class="line">&lt;NSThread: 0x60400006c080&gt;&#123;number = 1, name = main&#125; 1</div><div class="line">&lt;NSThread: 0x60400006c080&gt;&#123;number = 1, name = main&#125; 2</div><div class="line">&lt;NSThread: 0x60400006c080&gt;&#123;number = 1, name = main&#125; 3</div><div class="line">&lt;NSThread: 0x60400006c080&gt;&#123;number = 1, name = main&#125; 4</div><div class="line">End Here</div></pre></td></tr></table></figure>
+<h4 id="主-队-列-异步任务"><a href="#主-队-列-异步任务" class="headerlink" title="主 队 列  +  异步任务"></a>主 队 列  +  异步任务</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">print</span>(<span class="string">"Begin Here"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">5</span> &#123;</div><div class="line">    main_queue.async &#123;</div><div class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current, i)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="built_in">print</span>(<span class="string">"End Here"</span>)</div></pre></td></tr></table></figure>
+<p>Console log: <strong>先打印了End Here之后,才开始执行循环中的打印.这是因为虽然是异步任务,但是主队列中不允许新开线程,只允许有一个主线程,所以异步任务还是会在主线程中执行,但是需要等主线程中的其他任务完成之后才开始执行</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Begin Here</div><div class="line">End Here</div><div class="line">&lt;NSThread: 0x60400006c080&gt;&#123;number = 1, name = main&#125; 0</div><div class="line">&lt;NSThread: 0x60400006c080&gt;&#123;number = 1, name = main&#125; 1</div><div class="line">&lt;NSThread: 0x60400006c080&gt;&#123;number = 1, name = main&#125; 2</div><div class="line">&lt;NSThread: 0x60400006c080&gt;&#123;number = 1, name = main&#125; 3</div><div class="line">&lt;NSThread: 0x60400006c080&gt;&#123;number = 1, name = main&#125; 4</div></pre></td></tr></table></figure>
+<h4 id="主-队-列-同步任务"><a href="#主-队-列-同步任务" class="headerlink" title="主 队 列  +  同步任务"></a>主 队 列  +  同步任务</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">print</span>(<span class="string">"Begin Here"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">0</span>..&lt;<span class="number">5</span> &#123;</div><div class="line">    main_queue.sync &#123;</div><div class="line">        <span class="built_in">print</span>(<span class="type">Thread</span>.current, i)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="built_in">print</span>(<span class="string">"End Here"</span>)</div></pre></td></tr></table></figure>
+<p>Console log: <strong>卡死! 这是循环等待导致.循环中的打印需要等待主线程End Here的打印完成,但是End Here的打印又因为循环中的同步任务导致主线程卡死,所以谁也无法执行,就卡死了! </strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">运行报错:</div><div class="line"> error: Execution was interrupted, reason: EXC_BAD_INSTRUCTION (code=EXC_I386_INVOP, subcode=0x0)</div></pre></td></tr></table></figure>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><ol>
+<li>串行队列最多只会开一条子线程, 如果是同步任务,则不会新开线程,都在主线程执行. 如果是异步任务,则开一条子线程,顺序执行.</li>
+<li>并行队列可以开多条线程,也可能不开. 如果是同步任务,不会新开新城,都在主线程执行,如果是异步任务,则会开多条子线程,各自执行.</li>
+</ol>
+<h2 id="Talking-Code"><a href="#Talking-Code" class="headerlink" title="Talking Code"></a>Talking Code</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> concurrent_queue_1 = <span class="type">DispatchQueue</span>(label: <span class="string">"com.concurrent.example1"</span>, attributes: .concurrent)</div><div class="line"></div><div class="line">concurrent_queue_1.async &#123;    </div><div class="line">    concurrent_queue_1.sync &#123;</div><div class="line">        sleep(<span class="type">UInt32</span>(<span class="number">0.8</span>))</div><div class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(Thread.current)</span>, Task1 Run!"</span>)</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    concurrent_queue_1.async &#123;</div><div class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(Thread.current)</span>, Task2 Run!"</span>)</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    concurrent_queue_1.async &#123;</div><div class="line">        <span class="built_in">print</span>(<span class="string">"<span class="subst">\(Thread.current)</span>, Task3 Run!"</span>)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="built_in">print</span>(<span class="string">"<span class="subst">\(Thread.current)</span>, Task4 Run!"</span>)</div></pre></td></tr></table></figure>
+<p>Console log:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;NSThread: 0x604000062f80&gt;&#123;number = 1, name = main&#125;, Task4 Run!</div><div class="line">&lt;NSThread: 0x60000006de00&gt;&#123;number = 4, name = (null)&#125;, Task1 Run!</div><div class="line">&lt;NSThread: 0x604000070240&gt;&#123;number = 5, name = (null)&#125;, Task2 Run!</div><div class="line">&lt;NSThread: 0x60000006de00&gt;&#123;number = 4, name = (null)&#125;, Task3 Run!</div></pre></td></tr></table></figure>
+<ol>
+<li>最外层是并行队列, 所以可以开子线程, 因为是异步任务,所以铁定是在子线程(假定是002)中执行这些任务.这样一来,Task1, 2, 3都确定是在子线程.</li>
+<li>Task1处在并行队列, 有可能开子线程,也有可能不开, 再看Task1是同步任务,所以不会开子线程了,就是线程002上执行,并且后面的Task2, 3都要等待它完成.</li>
+<li>在Task1执行完毕之后, Task2 和 Task3因为都是并行队列+异步任务,就在其他子线程中执行了,顺序也不定.</li>
+<li>至于Task4, 执行顺序就不确定了,它并不受其他任务的干扰.</li>
+</ol>
+</section>
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Swift" >
+    <span class="tag-code">Swift</span>
+  </a>
+
+      </div>
+    
+    <div class="money-like">
+      <div class="reward-btn">
+        赏
+        <span class="money-code">
+          <span class="alipay-code">
+            <div class="code-image"></div>
+            <b>使用支付宝打赏</b>
+          </span>
+          <span class="wechat-code">
+            <div class="code-image"></div>
+            <b>使用微信打赏</b>
+          </span>
+        </span>
+      </div>
+      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+    </div>
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    
+      <div id="comments"></div>
+    
+  </article>
+</main>
+
+<script>
+  (function () {
+    var url = 'http://codermario.me/2017/02/01/队列/';
+    $('#article-banner').geopattern(url)
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      var imageW = $(this).width()
+      var imageH = $(this).height()
+      
+      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+      zoom = zoom < 1 ? 1 : zoom
+      zoom = zoom > 2 ? 2 : zoom
+      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+      $('.image-view-wrap').addClass('wrap-active')
+      $('.image-view-wrap img').css({
+        'width': `${imageW}`,
+        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+      })
+      $('html').css('overflow', 'hidden')
+
+      $('.image-view-wrap').on('click', function() {
+        $(this).remove()
+        $('html').attr('style', '')
+      })
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "weelh";
+    if (gitmentConfig != "undefined") {
+      var gitment = new Gitment({
+        id: "GCD in Swift3",
+        owner: "weelh",
+        repo: "weelh.github.io",
+        oauth: {
+          client_id: "d5e506a92cc002327d0c",
+          client_secret: "e2b05915e16252b0e7f5e643032b9c3f76efc2b9"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'a59fc3b35aa0663799f66f93f31ad9eb';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

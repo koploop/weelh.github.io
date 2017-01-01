@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="iOS Developer">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  <title>
+    
+      修改Git Commit Date | Mario&#39;s Space
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+</head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Mario's Space</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>修改Git Commit Date</h2>
+  <p class="post-date">2017-10-05</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body">
+  <article class="post-article">
+    <section class="markdown-content"><p>某些情况下,你可能需要修改你的Git Commit Date来掩盖自己的偷懒,或者给你的Boss看…当然,通常不建议这么做.</p>
+<h4 id="修改本次提交时间"><a href="#修改本次提交时间" class="headerlink" title="修改本次提交时间"></a>修改本次提交时间</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// 指定时间</div><div class="line">export GIT_AUTHOR_DATE="2016-10-01T22:30:12+08:00"</div><div class="line">export GIT_COMMITTER_DATE="2016-10-01T22:30:12+08:00"</div><div class="line">// 正常提交</div><div class="line">git add .</div><div class="line">git commit -m "log"</div><div class="line">git push</div></pre></td></tr></table></figure>
+<p>如果要恢复正常时间,关闭你的 Terminal 即可.</p>
+<p>或者,我们可以来的专业一点:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">unset GIT_AUTHOR_DATE</div><div class="line">unset GIT_COMMITTER_DATE</div></pre></td></tr></table></figure>
+<h4 id="修改某次提交时间"><a href="#修改某次提交时间" class="headerlink" title="修改某次提交时间"></a>修改某次提交时间</h4><p>可是这时候你发现你已经提交了,再想修改时间怎么办呢?</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">GIT_COMMITTER_DATE="2017-11-12T11:11:00+0800" git commit --amend --date="2016-11-12T11:11:00+0800" -C 8bd5197c5bf48ce3f7114c2c2ec0cc4b4ab05afd</div></pre></td></tr></table></figure>
+<p>如果你只是本地 commit 了,并没有 push 到 origin, 那这样就已经OK, 输入 <code>git log</code> 你会发现提交已经变成了你更改的时间了. 但是如果已经 push 了呢? 也没关系,紧接着执行下面两条命令即可:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git pull</div><div class="line">git push</div></pre></td></tr></table></figure>
+<h4 id="Addition"><a href="#Addition" class="headerlink" title="Addition"></a>Addition</h4><p><code>author date</code> 与 <code>committer date</code> 分别代表什么意思?</p>
+<blockquote>
+<p>The author is the person who originally wrote the work, whereas the committer is the person who last applied the work</p>
+</blockquote>
+<p>简单来说, <code>author date</code>代表的是作者执行 <code>git commit</code> 的时间, 而 <code>committer date</code> 代表的是这个提交被改变的时间.通常情况下和 <code>author date</code> 一样.</p>
+<p>我们举例来说:</p>
+<p>有两个分支 <code>branch_A</code> 和 <code>branch_B</code> , <code>A</code> 作为当前工作目录,我们增加了一个提交 <code>a</code> , 这时候我们要将两个分支进行 <code>rebase</code> 以合并功能. 那么合并之后. 之前提交的 <code>a</code> 的 <code>committer date</code> 已经发生了变化, 而 <code>author date</code> 不会变化. </p>
+<p>现在, 相信你应该已经了解了!  想了解更多, 这里还有两篇相关的文章,可以参考.</p>
+<p><a href="https://stackoverflow.com/questions/11856983/why-git-authordate-is-different-from-commitdate" target="_blank" rel="external">Why git AuthorDate is different from CommitDate?</a>.</p>
+<p><a href="https://alexpeattie.com/blog/working-with-dates-in-git" target="_blank" rel="external">Working with dates in Git</a>.</p>
+</section>
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Git" >
+    <span class="tag-code">Git</span>
+  </a>
+
+      </div>
+    
+    <div class="money-like">
+      <div class="reward-btn">
+        赏
+        <span class="money-code">
+          <span class="alipay-code">
+            <div class="code-image"></div>
+            <b>使用支付宝打赏</b>
+          </span>
+          <span class="wechat-code">
+            <div class="code-image"></div>
+            <b>使用微信打赏</b>
+          </span>
+        </span>
+      </div>
+      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+    </div>
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    
+      <div id="comments"></div>
+    
+  </article>
+</main>
+
+<script>
+  (function () {
+    var url = 'http://codermario.me/2017/10/05/修改你的Git Commit Date/';
+    $('#article-banner').geopattern(url)
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      var imageW = $(this).width()
+      var imageH = $(this).height()
+      
+      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+      zoom = zoom < 1 ? 1 : zoom
+      zoom = zoom > 2 ? 2 : zoom
+      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+      $('.image-view-wrap').addClass('wrap-active')
+      $('.image-view-wrap img').css({
+        'width': `${imageW}`,
+        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+      })
+      $('html').css('overflow', 'hidden')
+
+      $('.image-view-wrap').on('click', function() {
+        $(this).remove()
+        $('html').attr('style', '')
+      })
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "weelh";
+    if (gitmentConfig != "undefined") {
+      var gitment = new Gitment({
+        id: "修改Git Commit Date",
+        owner: "weelh",
+        repo: "weelh.github.io",
+        oauth: {
+          client_id: "d5e506a92cc002327d0c",
+          client_secret: "e2b05915e16252b0e7f5e643032b9c3f76efc2b9"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'a59fc3b35aa0663799f66f93f31ad9eb';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+  </body>
+</html>
