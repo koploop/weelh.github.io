@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="iOS Developer">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  <title>
+    
+      iOS开发中的证书 | Mario&#39;s Space
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+</head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Mario's Space</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>iOS开发中的证书</h2>
+  <p class="post-date">2015-12-03</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body">
+  <article class="post-article">
+    <section class="markdown-content"><p>最近发现自己对apple的证书还是不太熟悉,虽然平常给测试打包,上预发布,发布什么的基本都没有问题,但有时候碰到一些问题的时候,还是会焦头烂额,还是对基本的一些东西不太熟悉,今天就好好整理总结一下.</p>
+<a id="more"></a>
+<h4 id="Part-One"><a href="#Part-One" class="headerlink" title="Part One"></a>Part One</h4><p>打开开发者中心,先看一下基本的框架:<br><img src="http://7xpcfa.com1.z0.glb.clouddn.com/iOS_Certificate_01.png" alt=""></p>
+<p><strong>Certification:证书</strong><br>1.Developer Certification:开发者证书;<br>2.Distribution Certificatio:发布证书;<br>3.Pending:未处理(例如未完成填写信息的证书会在这里出现);</p>
+<p><strong>Identifiers:标识</strong><br>1.App IDs:应用程序ID;它应该和你Xcode中的bundle ID一样;App ID分为两种:一种是以com.ErosLii.newer命名的唯一的一个ID,还有一种是统配的Wildcard App ID,类似于正则表达式的样子,com.erosLii.*标示所有com.erosLii.开头的都可以用;<br>2.Pass Type IDs:当你的应用程序想要存储一些银行卡啊之后的东西到自带的应用Wallet中的时候需要这个证书;<br>3.Website Push IDs:用于通过服务器向Safari推送服务(这个暂时没搞懂,还望大家指正);<br>4.iCloud Containers:这个是用作iCloud存储用的,你要先有一个iCloud-enabled provisioning profile,再在这里设定Container ID;<a href="http://samvermette.com/312" target="_blank" rel="external">这里有一篇文章可供了解</a><br>5.App Groups:这是iOS8新开放的功能,主要用于同一group下的app共享同一份读写空间,以实现数据共享.同样,推荐<a href="http://foggry.com/blog/2014/06/23/wwdc2014zhi-app-extensionsxue-xi-bi-ji/" target="_blank" rel="external">这里</a>的一篇文章用作了解;<br>6.Merchant IDs:关于这里,如果你之前和我一样不了解,那从2016年开始,你就必须要尽快了解了.它是用来支持Apple Pay,同样,去看看<a href="https://developer.apple.com/library/ios/ApplePay_Guide/Configuration.html" target="_blank" rel="external">文档</a>吧~</p>
+<p><strong>Devices:</strong><br>这个就比较简单了;配置你的测试机器,出现在devices名单中的设备可供安装调试;但是要知道每个账户中的设备数量限制是100个。Disable一台设备也不会增加名额，只能在membership year 开始的时候才能通过删除设备来增加名额。</p>
+<p><strong>Provisioning Profiles:描述文件(它是一个包含了以上三项的综合体,你在Xcode中的build setting中选择使用的就是这家伙)</strong><br>1.Development:开发;<br>2.Distribution:发布;</p>
+<h5 id="Part-Two"><a href="#Part-Two" class="headerlink" title="Part Two"></a>Part Two</h5><p>首先来说证书,证书是用来给应用程序签名的，只有经过签名的应用程序才能保证他的来源是可信任的，并且代码是完整的,未经修改的,在申请我们的第一个证书之前,我们需要上传有我们本地(钥匙串)生成的一个.CSR文件,<strong>这个过程中实际上是生成了一对公钥和私钥，保存在你Mac的Keychain中。代码签名正是使用这种基于非对称秘钥的加密方式，用私钥进行签名，用公钥进行验证。证书中包含了公钥,当你打包的时候,选择这书之后,苹果就会用私钥进行认证签名,确保这是你本人的更改和行为,所以要保存好私钥,一是可以给他人共享,二是如果丢失,那你这个证书也就不能用了,需要销毁重新生成一个新的证书</strong></p>
+<p><strong>1.Developer Certification</strong><br>可以创建以下类型的开发证书:<br>-App Development (1年)：用来开发和真机调试应用程序.<br>-Push Development (1年)：用来调试Apple Push Notification.<br>我们可以使用钥匙串生成副本(p12文件),供团队测试打包使用.</p>
+<p><strong>2.Production Certificate</strong><br>可以创建以下类型的发布证书:<br>-In-House and Ad Hoc (3年):用来发布In-House和AdHoc的应用程序。<br>-App Store:用来发布提交App Store.<br>-MDM CSR:商业应用分发(我们公司用的就是这个);<br>-Push Production((1年)：用来在发布版本中使用Apple Push Notification.<br>-Pass Type ID Certificate:这个我上文提到了;<br>-Website Push ID Certificate:同上;<br>发布证书安装在电脑上提供发布iOS程序的权限,开发人员可以制做测试版和发布版的程序,仅有配置该证书的电脑才可使用,而且不可以生成副本.也就是只有一个人可以执行发布的任务;</p>
+<h5 id="Part-Three"><a href="#Part-Three" class="headerlink" title="Part Three"></a>Part Three</h5><p>再来说说描述文件,或者叫做授权文件;一个Provisioning Profile文件包含了上述的所有内容：证书、App ID、设备。开发者帐号在创建授权文件时候会选择App Id，（开发者帐号下App Id中添加，单选）和UDID（开发者帐号下Devices中添加最多100个，多选）</p>
+<blockquote>
+<p>试想一下，如果我们要打包或者在真机上运行一个应用程序，我们首先需要证书来进行签名，用来标识这个应用程序是合法的、安全的、完整的等等；然后需要指明它的App ID，并且验证Bundle ID是否与其一致；再次，如果是真机调试，需要确认这台设备能否用来运行程序。而Provisioning Profile就把这些信息全部打包在一起，方便我们在调试和发布程序打包时使用，这样我们只要在不同的情况下选择不同的profile文件就可以了。而且这个Provisioning Profile文件会在打包时嵌入.ipa的包里。</p>
+</blockquote>
+<p>在网上找到一张图片:<br><img src="http://7xpcfa.com1.z0.glb.clouddn.com/Profile.png" alt="Profile工作原理"></p>
+<p><strong>1.Developer Provisioning Profile(1年)</strong><br>开发人员在code sign中选择该授权文件,即可进行真机测试,前提是安装了开发证书,bundleID和AppID一样,并且连接调试的设备的UDID在选中的授权文件中有记录;</p>
+<p><strong>2.Distribution Provisioning Profile(1年)</strong><br>发布版就是发布到App Store上的程序文件，开发者帐号创建授权文件时选择store选项，选择App Id，无需选择UDID；在装有发布证书的电脑上（即配置证书的电脑，只有一台）发布;</p>
+<p>关于这里有一些小东西要注意,在个人开发的时候一般不会有什么问题,但是目前在我的公司,iOS开发者有20多个人的时候再Git同步或者打包的时候偶尔会有一些问题,命名profile和证书都是正确的,但是还会编译失败,下次在iOS开发知识点汇总中记一下吧.</p>
+<h5 id="Part-Four-Summary"><a href="#Part-Four-Summary" class="headerlink" title="Part Four - Summary"></a>Part Four - Summary</h5><p>最后还是要说一下开发的流程,虽然大家可能都已经知道了,但是我一片完整的流程怎么能没有这个说明呢,哈哈.<br>1.申请证书;(包括了本地生成CSR文件,生成证书,下载导出);<br>2.将调试设备加入Devices中;<br>3.生成Provisioning Profile(描述文件名称,选择证书,AppID以及Devices,下载导出);<br>4.Xcode的Code Signing中真确选择;<br>我说的比较简单,如果你是一个新手,<a href="https://udn.epicgames.com/Three/AppleiOSProvisioningPortalCH.html" target="_blank" rel="external">这里</a>有一篇文章,写的极其详细,你可以参考.</p>
+<blockquote>
+<p><strong>最后,希望我的文章能帮到你,与君共勉.</strong></p>
+</blockquote>
+<h5 id="转载请务必注明出处"><a href="#转载请务必注明出处" class="headerlink" title="==转载请务必注明出处==."></a><strong>==转载请务必注明出处==.</strong></h5></section>
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#iOS" >
+    <span class="tag-code">iOS</span>
+  </a>
+
+  <a href="/tags#证书" >
+    <span class="tag-code">证书</span>
+  </a>
+
+      </div>
+    
+    <div class="money-like">
+      <div class="reward-btn">
+        赏
+        <span class="money-code">
+          <span class="alipay-code">
+            <div class="code-image"></div>
+            <b>使用支付宝打赏</b>
+          </span>
+          <span class="wechat-code">
+            <div class="code-image"></div>
+            <b>使用微信打赏</b>
+          </span>
+        </span>
+      </div>
+      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+    </div>
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    
+      <div id="comments"></div>
+    
+  </article>
+</main>
+
+<script>
+  (function () {
+    var url = 'http://codermario.me/2015/12/03/iOS开发中的证书/';
+    $('#article-banner').geopattern(url)
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      var imageW = $(this).width()
+      var imageH = $(this).height()
+      
+      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+      zoom = zoom < 1 ? 1 : zoom
+      zoom = zoom > 2 ? 2 : zoom
+      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+      $('.image-view-wrap').addClass('wrap-active')
+      $('.image-view-wrap img').css({
+        'width': `${imageW}`,
+        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+      })
+      $('html').css('overflow', 'hidden')
+
+      $('.image-view-wrap').on('click', function() {
+        $(this).remove()
+        $('html').attr('style', '')
+      })
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "weelh";
+    if (gitmentConfig != "undefined") {
+      var gitment = new Gitment({
+        id: "iOS开发中的证书",
+        owner: "weelh",
+        repo: "weelh.github.io",
+        oauth: {
+          client_id: "d5e506a92cc002327d0c",
+          client_secret: "e2b05915e16252b0e7f5e643032b9c3f76efc2b9"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'a59fc3b35aa0663799f66f93f31ad9eb';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

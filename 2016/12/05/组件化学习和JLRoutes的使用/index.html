@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="iOS Developer">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  <title>
+    
+      组件化学习和JLRoutes的使用 | Mario&#39;s Space
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+</head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Mario's Space</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>组件化学习和JLRoutes的使用</h2>
+  <p class="post-date">2016-12-05</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body">
+  <article class="post-article">
+    <section class="markdown-content"><p>JLRoute可以看做是一个路由调度器，通过注册路由地址（URL），进而实现对不同的URL做出反应，最重要的是它可以帮助我们解析出URL中的所有参数，只需要在注册的时候定义一些key，就可以在Block中通过这些key拿到参数。<br><a id="more"></a></p>
+<h1 id="组件化学习和JLRoutes的使用"><a href="#组件化学习和JLRoutes的使用" class="headerlink" title="组件化学习和JLRoutes的使用"></a>组件化学习和JLRoutes的使用</h1><h2 id="What"><a href="#What" class="headerlink" title="What"></a>What</h2><p>JLRoute可以看做是一个路由调度器，通过注册路由地址（URL），进而实现对不同的URL做出反应，最重要的是它可以帮助我们解析出URL中的所有参数，只需要在注册的时候定义一些key，就可以在Block中通过这些key拿到参数。</p>
+<h2 id="How"><a href="#How" class="headerlink" title="How"></a>How</h2><p>它工作的原理：利用UrlScheme做跳转，使用Url传递参数，打开指定的App或者某一个页面。</p>
+<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a>Why</h2><p>为什么会需要它？现在无论前后端还是移动端，都在推动模块化开发，为的就是某一个模块专注于自身的业务，提供服务，减小对其他模块的依赖，同时避免模块间的相互依赖，这样每一个模块既可以独立运行，又可以作为子模块方便的并入主工程中。不然的话，我们的每个模块一旦相互引用，那独立的模块根本无法编译通过，模块之间的依赖也变成了下图这样。。。<img src="http://7xpcfa.com1.z0.glb.clouddn.com/JLRoutes_001.png" alt="引用依赖"></p>
+<p><strong>举一个栗子:</strong><br>模块A和模块B需要满足能够相互跳转，同时传递一些数据，为了减少依赖，<strong>避免A中import B</strong>，此时我们有两种解决方案：</p>
+<ul>
+<li><strong>中间件</strong></li>
+<li><strong>UrlRouter</strong></li>
+</ul>
+<hr>
+<p><strong>方案一：中间件</strong><br>一个中间者,它负责提供类方法来初始化模块B中的viewController并且通过present或者push跳转到B，同理B跳转A也是如此。代码类似下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">//Mediator.m</div><div class="line">#import &quot;ModuleA.h&quot;</div><div class="line">#import &quot;ModuleB.h&quot;</div><div class="line">@implementation Mediator</div><div class="line">+ (UIViewController *)ModuleA_viewController:(NSString *)AName parameter:(id *)para &#123;</div><div class="line">	ModuleA *a = [[ModuleA alloc]initWithName:AName];</div><div class="line">	a.property = para;</div><div class="line">	return a;</div><div class="line">&#125;</div><div class="line">+ (UIViewController *)ModuleB_viewController:(NSString *)BName parameter:(id *)para &#123;</div><div class="line">    ModuleB *b = [[ModuleB alloc]initWithID:BID];</div><div class="line">	a.property = para;    </div><div class="line">	return b;</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>这样是OK的，把所有的import都引入到中间件中。依赖就变成了这样：<br><img src="http://7xpcfa.com1.z0.glb.clouddn.com/JLRoute_002.png" alt="JLRoute_002"></p>
+<p>但是这样也有一些小问题：</p>
+<ol>
+<li>这个中间件不是照样需要import所有的模块嘛，而模块又依赖中间件，并没有解除引入依赖啊，怎么办？我们可以运用OC的运行时来初始化，从来避免引入某一个模块的类，像下面这样：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">//Mediator.m</div><div class="line">#import &quot;ModuleA.h&quot;</div><div class="line">#import &quot;ModuleB.h&quot;</div><div class="line">@implementation Mediator</div><div class="line">+ (UIViewController *)ModuleA_viewController:(NSString *)AName parameter:(id *)para &#123;</div><div class="line">    Class cls = NSClassFromString(@&quot;AName&quot;);</div><div class="line">    return [cls performSelector:NSSelectorFromString(@&quot;detailViewController:&quot;) withObject:@&quot;para&quot;];</div><div class="line">	return cls;</div><div class="line">&#125;</div><div class="line">+ (UIViewController *)ModuleB_viewController:(NSString *)BName parameter:(id *)para &#123;</div><div class="line">    Class cls = NSClassFromString(@&quot;BName&quot;);</div><div class="line">    return [cls performSelector:NSSelectorFromString(@&quot;detailViewController:&quot;) withObject:@&quot;para&quot;];</div><div class="line">	return cls;</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>这样中间件就完全干净了，依赖也解除了。<br><img src="http://7xpcfa.com1.z0.glb.clouddn.com/JLRoutes_003.png" alt="JLRoutes_003"></p>
+<ol>
+<li>那既然使用了runtime，为什么还要这样通过中间件来实现呢？直接在模块中写不就行了吗？因为：</li>
+</ol>
+<ul>
+<li>避免每次调用都要写一坨这样没有提示的代码；</li>
+<li>对于参数的传递有很大的好处，由于performSelector的参数限制，所以如果参数大于两个你基本上都要传一个字典进去，这样别人看代码就会一脸懵逼，也不知道分别代表什么意思，包括哪些参数必传哪些可不传。而通过中间件，你可以定义一些文档，甚至声明公用的数据Model，直接传递Model再由中间件解析成字典。这样起码调用者可以很清晰的知道参数需要怎么写。</li>
+<li>Mediator可以做统一处理，调用某个组件方法时如果某个组件不存在，可以做相应操作。</li>
+</ul>
+<p>上面做完之后，基本上各个模块也解耦了，多有组件都依赖中间件，中间件不依赖任何其他模块。下面说一下优化点，这里直接引用<a href="http://blog.cnbang.net/" target="_blank" rel="external">Bang大神</a>的文章：</p>
+<blockquote>
+<p>有两个优化点：<br>Mediator 每一个方法里都要写 runtime 方法，格式是确定的，这是可以抽取出来的。<br>每个组件对外方法都要在 Mediator 写一遍，组件一多 Mediator 类的长度是恐怖的。<br>优化后就成了 casa 的方案，target-action 对应第一点，target就是class，action就是selector，通过一些规则简化动态调用。Category 对应第二点，每个组件写一个 Mediator 的 Category，让 Mediator 不至于太长。</p>
+</blockquote>
+<p>针对此，我简单画了下面的图，方便理解到底是怎么优化的（其实我觉得这个优化才是最重要的，否则上面的写法真的很臃肿）<br><img src="http://7xpcfa.com1.z0.glb.clouddn.com/JLRoute_005.png" alt="JLRoute_005"></p>
+<ul>
+<li>中间的一大块都是Mediator的部分，<code>Mediator+apiB</code>就是B模块的一个分类，它提供了调用B的一些方法，里面同时定义了许多的宏，比如调用者ClassName，方法名selectorName等等，它通过<code>performTarget:action:</code>的方式调起Mediator通用方法，里面可以包含异常处理以及缓存机制,eg:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//异常处理</div><div class="line">if (target == nil) &#123;</div><div class="line">        return nil;</div><div class="line">&#125;</div><div class="line">if (![target respondsToSelector:action]) &#123;</div><div class="line">    return nil;</div><div class="line">&#125;</div><div class="line">//缓存机制</div><div class="line">if (shouldCacheTarget) &#123;</div><div class="line">        self.cachedTarget[targetClassString] = target;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>为什么还要有一层Target_B,因为Mediator中是统一处理的，所以必然需要这一层来实例化ModuleB,调起ModuleB中的对应方法。其实就相当于ModuleB的一个Service层。</li>
+</ul>
+<p><strong>方案二：UrlRouter</strong><br>这种方案的原理在前面也说了，就是先注册url。在根据url匹配触发不同的事件，初始化控制器等。本文使用的是<a href="https://github.com/joeldev/JLRoutes" target="_blank" rel="external">JLRoutes</a>，目前github上有3k+的star，当然你也可以使用同类的类似<a href="https://github.com/clayallsopp/routable-ios" target="_blank" rel="external">routable-ios</a>等。</p>
+<p>[1] info.plist中添加Url Scheme;<br>[2] 注册Url；（建议写在AppDelegate的分类中）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[[JLRoutes globalRoutes] addRoute:@&quot;/root/simple/:viewController/:bg_color/:userName&quot; handler:^BOOL(NSDictionary&lt;NSString *,id&gt; * _Nonnull parameters) &#123;</div><div class="line">    UIStoryboard *board = [UIStoryboard storyboardWithName:@&quot;Main&quot; bundle:nil];</div><div class="line">        SecondViewController *secondViewController = [board instantiateViewControllerWithIdentifier:controllerKey];</div><div class="line">        secondViewController.descriptionText = userName;</div><div class="line">        UIColor *color = [self colorFromRGBAString:bg_colorKey];</div><div class="line">        secondViewController.view.backgroundColor = color;</div><div class="line">        [self.window.rootViewController presentViewController:secondViewController animated:YES completion:nil];</div><div class="line">        return YES;</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<p>[3] 在其他模块中或者其他App中调用；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (IBAction)tapAction:(UIButton *)sender &#123;</div><div class="line">     NSString *color = @&quot;176,224,230,1&quot;;</div><div class="line">     NSString *customUrl = [NSString stringWithFormat:@&quot;JLRoutesDemo://root/simple/SecondViewController/%@/AlexKop&quot;, color];</div><div class="line">     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:customUrl]];</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>这是最简单的栗子，还有一些复杂的路由匹配，通配符等等，我都写在了这个<a href="https://github.com/weelh/JLRoutesDemo" target="_blank" rel="external">Demo</a>中，需要的话可以看下。</p>
+<p>这种还是比较好理解的，但是它就属于看起来容易写起来很头疼那种;</p>
+<ol>
+<li>调用者要写一长串url，包括路径和参数，纯手写，难免写错；</li>
+<li>调用者不知道哪些参数必传哪些可选参数，增加沟通和联调成本；</li>
+<li>每个组件都需要初始化，组件多了会有内存问题。</li>
+</ol>
+<p>还有大神们提出的将本地组件调用和远程App调用区分开的问题，<a href="http://blog.cnbang.net/tech/3080/" target="_blank" rel="external">这里</a>有详细的讲解，还有针对蘑菇街组件化的一些讲解，需要的可以自己看下。</p>
+<p>最后我自己觉得非常赞的是<a href="http://awhisper.github.io/2016/06/12/%E8%B7%AF%E7%94%B1%E8%B7%B3%E8%BD%AC%E7%9A%84%E6%80%9D%E8%80%83/" target="_blank" rel="external">这篇文章</a>里提到的思路,将中间人模式Mediator和UrlRoute结合起来的一种实践方式。</p>
+<p><img src="http://7xpcfa.com1.z0.glb.clouddn.com/JLRoute_006.png" alt="JLRoute_006"></p>
+<p>这张图的思路很清晰，我也正在研究作者的Demo，希望后续能和大家分享。其实我也是小白，理解架构师级别的文章真的很难，只不过对这个新技术很感兴趣，所以就先记下来，哪怕抄一遍我觉得也很有助于理解，哈哈。</p>
+<p>本文部分代码段和图片来自网络，如有侵权，立即删除。<br>参考文章：<br><a href="http://awhisper.github.io/2016/06/12/%E8%B7%AF%E7%94%B1%E8%B7%B3%E8%BD%AC%E7%9A%84%E6%80%9D%E8%80%83/?utm_source=tuicool&amp;utm_medium=referral" target="_blank" rel="external">路由跳转的思考</a><br><a href="http://blog.cnbang.net/tech/3080/" target="_blank" rel="external">iOS 组件化方案探索</a><br><a href="http://casatwy.com/iOS-Modulization.html" target="_blank" rel="external">Casa大神的组件化方案</a></p>
+</section>
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#iOS" >
+    <span class="tag-code">iOS</span>
+  </a>
+
+  <a href="/tags#路由" >
+    <span class="tag-code">路由</span>
+  </a>
+
+      </div>
+    
+    <div class="money-like">
+      <div class="reward-btn">
+        赏
+        <span class="money-code">
+          <span class="alipay-code">
+            <div class="code-image"></div>
+            <b>使用支付宝打赏</b>
+          </span>
+          <span class="wechat-code">
+            <div class="code-image"></div>
+            <b>使用微信打赏</b>
+          </span>
+        </span>
+      </div>
+      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+    </div>
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    
+      <div id="comments"></div>
+    
+  </article>
+</main>
+
+<script>
+  (function () {
+    var url = 'http://codermario.me/2016/12/05/组件化学习和JLRoutes的使用/';
+    $('#article-banner').geopattern(url)
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      var imageW = $(this).width()
+      var imageH = $(this).height()
+      
+      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+      zoom = zoom < 1 ? 1 : zoom
+      zoom = zoom > 2 ? 2 : zoom
+      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+      $('.image-view-wrap').addClass('wrap-active')
+      $('.image-view-wrap img').css({
+        'width': `${imageW}`,
+        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+      })
+      $('html').css('overflow', 'hidden')
+
+      $('.image-view-wrap').on('click', function() {
+        $(this).remove()
+        $('html').attr('style', '')
+      })
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "weelh";
+    if (gitmentConfig != "undefined") {
+      var gitment = new Gitment({
+        id: "组件化学习和JLRoutes的使用",
+        owner: "weelh",
+        repo: "weelh.github.io",
+        oauth: {
+          client_id: "d5e506a92cc002327d0c",
+          client_secret: "e2b05915e16252b0e7f5e643032b9c3f76efc2b9"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'a59fc3b35aa0663799f66f93f31ad9eb';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

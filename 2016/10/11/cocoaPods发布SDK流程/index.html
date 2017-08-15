@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="iOS Developer">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  <title>
+    
+      cocoaPods发布SDK流程 | Mario&#39;s Space
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+</head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Mario's Space</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>cocoaPods发布SDK流程</h2>
+  <p class="post-date">2016-10-11</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body">
+  <article class="post-article">
+    <section class="markdown-content"><p>本文记录下第一次发布SDK到私有Pods的流程以及自己走过的其中的一些坑<br><a id="more"></a></p>
+<h1 id="cocoaPods发布新版本SDK流程"><a href="#cocoaPods发布新版本SDK流程" class="headerlink" title="cocoaPods发布新版本SDK流程"></a>cocoaPods发布新版本SDK流程</h1><p><strong>以下的这些流程都是我初次接触组件化开发的时候写下来的，因为组件化开发，每一个组件都存在公司的私有GitLab仓库中，工程使用cocoapods管理，所以学习了下，但是后来逐渐明白了原理，自己也比较轻车熟路了，发现上面写的这些流程好死板。。。如果你有这方面的问题，可以留言咨询哦</strong></p>
+<h2 id="第一次发布SDK"><a href="#第一次发布SDK" class="headerlink" title="第一次发布SDK"></a>第一次发布SDK</h2><p>首先记录下第一次发布SDK到私有Pods的流程以及自己走过的其中的一些坑,大致有下面几步操作:</p>
+<ol>
+<li>在gitlab上建立私有的SDK库(<code>XCommonSDK</code>);</li>
+<li>在gitlab上建立私有的podspec库(<code>XPrivatePods</code>);</li>
+<li>使用命令在<code>cocoapods/repo</code>目录下创建本地私有的spec repo(XPrivatePods);<br><code>pod repo add XPrivatePods SOURCE_URL</code></li>
+<li>在XCommonSDK目录建立<code>XCommon.podspec</code>文件并编辑;</li>
+<li>使用命令检验一下spec文件和SDK是否合格（其实这一步不需要也行，因为有时候当你的podspec中依赖了其他的私有库，这一步是无论如何都无法通过的）<br> <code>pod lib lint</code></li>
+<li>合格之后,将代码提交到<code>XCommonSDK</code>仓库,并且生成一个tag 1.0.0;</li>
+<li>接下来开始向XPrivatePods提交podspec文件（或者直接将文件加入到XPrivatePods目录下，然后执行git push）;<br> <code>pod repo push XPrivatePods XCommonSDK.podspec</code><br>– 完成.</li>
+</ol>
+<h2 id="问题汇总"><a href="#问题汇总" class="headerlink" title="问题汇总"></a>问题汇总</h2><p>一般情况下,XCommonSDK库中会有两个文件夹<code>SDK</code>和<code>Demo</code>以及readme和license文件等;Demo里面放上演示的Demo,SDK中放我们的SDK,而我们的podspec文件就要放在SDK根目录中; 在写podspec文件的时候,也是一堆的吭啊~其实如果简单的按照网上的教程做下去大部分好像也没问题,但是如果自己想做的时候,目录结构稍微不一样,就会有一大堆坑,所以一定要<strong>理解podspec文件</strong>;问题的根源主要集中在<code>spec.source</code>和<code>spec.source_files</code>以及<code>spec.resource_bundles</code>这三个地方.</p>
+<hr>
+<p>[1]  <code>spec.source</code>指定SDK的源地址,如果暂时不指定某一个tag,可以这样写:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#指定以某一个提交为源</span></div><div class="line">spec.source = &#123; <span class="symbol">:git</span> =&gt; <span class="string">"https://gitlab.com/weelh/XCommonSDK.git"</span>, <span class="symbol">:commit</span> =&gt; <span class="string">"5f5dc709"</span> &#125;</div><div class="line"><span class="comment">#如果已经生成了tag,可以这样写:</span></div><div class="line">spec.source = &#123; <span class="symbol">:git</span> =&gt; <span class="string">"https://gitlab.com/weelh/XCommonSDK.git"</span>, <span class="symbol">:tag</span> =&gt; <span class="string">"1.0.2"</span> &#125;</div></pre></td></tr></table></figure>
+<p>这里的”1.0.2”是你tag的名字,如果你的tag叫XKSCommonSDK(V1.1.1),那就将1.0.2替换为XKSCommonSDK(V1.0.1); 当然,cocoapods还支持多种样式的sources写法:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">spec.source = &#123; <span class="symbol">:git</span> =&gt; <span class="string">'https://github.com/typhoon-framework/Typhoon.git'</span>, <span class="symbol">:tag</span> =&gt; <span class="string">"<span class="subst">#&#123;spec.version&#125;</span>"</span>, <span class="symbol">:submodules</span> =&gt; <span class="literal">true</span> &#125;</div></pre></td></tr></table></figure>
+<p>更多请戳<a href="https://guides.cocoapods.org/syntax/podspec.html#source" target="_blank" rel="external">这里</a>查看官方文档.</p>
+<p>[2]  <code>spec.source_files</code>指定SDK中要加载的文件,通常这样写.</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#路径必须写对: 相对路径/**/*, 其中**/*表示匹配子目录下的所有文件</span></div><div class="line">spec.source_files  = <span class="string">"Src/**/*.&#123;h,m&#125;"</span></div></pre></td></tr></table></figure>
+<p>这里的坑点在于网上的教程没有告诉你这里的路径要写相对路径,即你的<code>podspec</code>文件相对于SDK的路径,这里我假设我的<code>podspec</code>文件与<code>SDK</code>和<code>Demo</code>在同一级目录,则如上写法,假如你的<code>podspec</code>文件在<code>SDK</code>文件夹中,而<code>SDK</code>文件夹中又存在<code>CommonMarco</code>,<code>Functions</code>两个文件夹,那就要换成下面的写法:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">spec.source_files  = <span class="string">"CommonMarco/**/*.&#123;h,m&#125;"</span>,<span class="string">"Functions/**/*.&#123;h,m&#125;"</span></div><div class="line"><span class="comment">#有多个就添加多个,所以综上所述最后还是将`podspec`文件放在`SDK`的上一层稍微方便点;</span></div></pre></td></tr></table></figure>
+<p>[3] <code>spec.resource_bundles</code>指定SDK库所需要的资源文件,通常这样写:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">spec.resource_bundles = &#123;</div><div class="line">    <span class="string">'XCommonSDK'</span> =&gt; [</div><div class="line">	    <span class="string">'Src/**/*.&#123;storyboard,xcassets,xib&#125;'</span>,</div><div class="line">	    <span class="string">'Images/**/*.png'</span></div><div class="line">	    ],</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>前面的<code>&#39;XCommonSDK&#39;</code>代表当前的SDK,如果有其他的依赖SDK也需要指定资源,可以在平级继续加:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">spec.resource_bundles = &#123;</div><div class="line">    <span class="string">'XCommonSDK'</span> =&gt; [</div><div class="line">	    <span class="string">'Src/**/*.&#123;storyboard,xcassets,xib&#125;'</span>,</div><div class="line">	    <span class="string">'Images/**/*.png'</span></div><div class="line">	    ],</div><div class="line">    <span class="string">'OtherResources'</span> =&gt; [<span class="string">'MapView/Map/OtherResources/*.png'</span>]</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>文件的路径也是要填写相对路径的,不要搞错.</p>
+<ol>
+<li>有时候明明自己写的没有问题,但是使用<code>pod lib lint</code>就是一直不通过,这时候就可以本地建立一个工程<code>Test</code>,在与<code>Test</code>的平级目录放上自己的SDK文件夹<code>src</code>,<code>src</code>中放上<code>podspec</code>文件.这里要修改一下,将<code>spec.source = { :path =&gt; &quot;./&quot; }</code>改成这样,使用本地的.同时<code>source_file</code>也要改一下. 随后回到你的工程文件,添加一个<code>podfile</code>文件,里面引用<code>src</code>中的库.像这样<code>pod &#39;CHDAreaModule&#39;, :path =&gt;&#39;../src/CHDAreaModule.podspec&#39;</code>,接下来<code>pod install</code>,看是否可以在工程中正确运行,如果可以,说明真的没问题.</li>
+</ol>
+<p>其实这些都是小问题,我自己之前搞的时候参考别人的,比葫芦画瓢,就因为不理解什么意思,使用命令<code>pod lib lint</code>验证的时候就一直失败报错~ 后来去官网上看了看,又总结了下,终于搞好了~</p>
+<p>##SDK的维护更新<br>通常我们会在发布之后,使用过程中发现一些问题,或者增加一些功能,这时候就需要发布一个新的版本.</p>
+<ol>
+<li>我们第一次发布的时候,使用<code>pod repo push XPrivatePods XCommonSDK.podspec</code>命令,将<code>XCommonSDK.podspec</code>文件提交到<code>XPrivatePods</code>同时我们的<code>XCommonSDK</code>中的<code>XCommonSDK.podspec</code>文件也没有了~ 我们的远程仓库<code>XPrivatePods</code>中多了一个<code>1.0.0</code>的SDK版本,再看看本地<code>~/cocoapods/repos</code>中也有了这个版本~ </li>
+<li>更新其实很容易,只要我们把本地目录(XPrivatePods)中的那个<code>XCommonSDK.podspec</code>拷贝出来,放到XCommonSDK的SDK目录中,进行修改之后,验证通过,将修改push到远端仓库,再执行命令<code>pod repo push XPrivatePods XCommonSDK.podspec</code>即可.<br><strong>12.1日更新</strong><br>其实更新也不用上面这么麻烦，在XPrivatePods/XCommonSDK目录下，存在着你的已经发布的历史版本，每一个版本都是一个文件夹，你只要拷贝一下，然后改一下文件夹名字为你想要新添加的版本，再把里面的podSepc文件也改一下，最后运行git push就可以了。</li>
+</ol>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>无意间发现了一个blog,里面有一篇<a href="https://www.zybuluo.com/yanzhiwei147/note/84785#sdk代码目录" target="_blank" rel="external">文章</a>,主要介绍随着我们SDK的逐渐壮大,必须要注意SDK目录的规范,这位作者给出了自己的IMSDK的目录参考如下,个人觉得还是挺不错的.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">.   SDK主目录</div><div class="line">├── IMSDK   SDK代码目录</div><div class="line">│   ├── IMSDK.h SDK对外暴露集合头文件</div><div class="line">│   ├── include     SDK对外暴露文件(可以含m文件)</div><div class="line">│   │   ├── IMPublicClass.h</div><div class="line">│   │   ├── IMPublicClass.m</div><div class="line">│   │   ├── IMPublicMethods.h</div><div class="line">│   │   └── IMPublicMethods.m</div><div class="line">│   └── src     SDK内部实现文件</div><div class="line">│       ├── IMPrivateClass.h</div><div class="line">│       ├── IMPrivateClass.m</div><div class="line">│       ├── IMPublicMethods+Private.h</div><div class="line">│       └── IMPublicMethods+Private.m</div><div class="line">├── IMSDK.podspec   SDK发布自描述文件</div><div class="line">├── IMSDK.xcodeproj SDK工程文件</div><div class="line">│   └── project.pbxproj</div><div class="line">├── IMSDK.xcworkspace   SDK（依赖库集成）编译工作区间</div><div class="line">│   └── contents.xcworkspacedata</div><div class="line">├── IMSDKBundle     SDK资源bundle</div><div class="line">│   ├── Info.plist</div><div class="line">│   └── topnav_bkg.png</div><div class="line">├── IMSDKTests      SDK单元测试</div><div class="line">│   ├── IMCommonTests.m</div><div class="line">│   └── Info.plist</div><div class="line">├── Build.sh    SDK framework生成脚本</div><div class="line">├── CHANGES     版本更新记录文件</div><div class="line">└── Podfile     SDK依赖描述文件</div></pre></td></tr></table></figure></p>
+<p>有一些之前没有留意过的,比如<code>CHANGES</code>这个文件夹. <code>CHANGES</code>中放置<code>CHANGELOG.md</code>文件, 用以标示SDK版本发布特性：新特性、问题修复等.</p>
+</section>
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#iOS" >
+    <span class="tag-code">iOS</span>
+  </a>
+
+  <a href="/tags#CocoaPods" >
+    <span class="tag-code">CocoaPods</span>
+  </a>
+
+      </div>
+    
+    <div class="money-like">
+      <div class="reward-btn">
+        赏
+        <span class="money-code">
+          <span class="alipay-code">
+            <div class="code-image"></div>
+            <b>使用支付宝打赏</b>
+          </span>
+          <span class="wechat-code">
+            <div class="code-image"></div>
+            <b>使用微信打赏</b>
+          </span>
+        </span>
+      </div>
+      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+    </div>
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    
+      <div id="comments"></div>
+    
+  </article>
+</main>
+
+<script>
+  (function () {
+    var url = 'http://codermario.me/2016/10/11/cocoaPods发布SDK流程/';
+    $('#article-banner').geopattern(url)
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      var imageW = $(this).width()
+      var imageH = $(this).height()
+      
+      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+      zoom = zoom < 1 ? 1 : zoom
+      zoom = zoom > 2 ? 2 : zoom
+      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+      $('.image-view-wrap').addClass('wrap-active')
+      $('.image-view-wrap img').css({
+        'width': `${imageW}`,
+        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+      })
+      $('html').css('overflow', 'hidden')
+
+      $('.image-view-wrap').on('click', function() {
+        $(this).remove()
+        $('html').attr('style', '')
+      })
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "weelh";
+    if (gitmentConfig != "undefined") {
+      var gitment = new Gitment({
+        id: "cocoaPods发布SDK流程",
+        owner: "weelh",
+        repo: "weelh.github.io",
+        oauth: {
+          client_id: "d5e506a92cc002327d0c",
+          client_secret: "e2b05915e16252b0e7f5e643032b9c3f76efc2b9"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'a59fc3b35aa0663799f66f93f31ad9eb';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+  </body>
+</html>
