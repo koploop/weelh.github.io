@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="iOS Developer">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  <title>
+    
+      Mario&#39;s Space
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+</head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Mario's Space</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2></h2>
+  <p class="post-date">2017-08-18</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body">
+  <article class="post-article">
+    <section class="markdown-content"><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">title: Mac下多Ruby环境的坑</div><div class="line">date: 2016-6-17</div><div class="line">categories: vim</div><div class="line">tags:</div><div class="line">    - Ruby</div><div class="line">    - Gem</div></pre></td></tr></table></figure>
+<p>使用gem安装工具包时候，报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">gem install xcpretty</div><div class="line">Fetching: rouge-2.0.7.gem (100%)</div><div class="line">You don&apos;t have write permissions for the /Library/Ruby/Gems/2.0.0 directory</div></pre></td></tr></table></figure>
+<p>原因：系统默认的Ruby环境不允许我们随便更改。</p>
+<p>解决办法：</p>
+<ol>
+<li>使用<code>sudo</code> 获取root权限安装. <code>sudo gem install xcpretty</code></li>
+<li>在用户目录下安装供开发者使用的Ruby,并使用<code>RVM</code>管理Ruby环境.</li>
+</ol>
+<p>第一种方法有很多人不推荐. 当然也有人觉得无所谓.具体可以参考<a href="https://stackoverflow.com/questions/14607193/installing-gem-or-updating-rubygems-fails-with-permissions-error" target="_blank" rel="external">Stack Overflow</a> 里的争论.</p>
+<p>这里讲第二种方法.</p>
+<h4 id="安装RVM-Ruby-Version-Manager"><a href="#安装RVM-Ruby-Version-Manager" class="headerlink" title="安装RVM (Ruby Version Manager)"></a>安装RVM (Ruby Version Manager)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl -L get.rvm.io | bash -s stable</div></pre></td></tr></table></figure>
+<h4 id="安装Ruby"><a href="#安装Ruby" class="headerlink" title="安装Ruby"></a>安装Ruby</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">rvm list known  	// 列出ruby可安装的版本信息</div><div class="line">rvm install 2.4.0 	// 安装一个ruby版本</div><div class="line">rvm list 			// 查看已安装的ruby</div><div class="line">rvm remove 2.4.0	// 卸载一个已安装ruby版本</div></pre></td></tr></table></figure>
+<h4 id="切换Ruby版本"><a href="#切换Ruby版本" class="headerlink" title="切换Ruby版本"></a>切换Ruby版本</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">rvm use system 			// 使用系统的ruby</div><div class="line">rvm use 2.4.0  			// 使用安装的ruby</div><div class="line"></div><div class="line">rvm use 2.4.0 --default	// 设置默认版本</div></pre></td></tr></table></figure>
+<p><strong>Explain</strong></p>
+<p>由于gem本质上用来管理和分发Ruby程序的包管理工具,是属于Ruby标准库的一部分.</p>
+<p>使用gem安装的工具都处于gem的管理之下,所以在我们切换了Ruby版本之后,对应的gem也就随之切换.那么使用gem安装的包,例如<code>cocoapods</code>,<code>xcpretty</code>等都会随之切换.如果之前使用了系统的ruby版本安装了<code>cocoapods</code>,那么切换到新安装的2.4.0之后,<code>cocoapods</code>也会随之失效,需要重新安装或者切换回系统ruby版本使用.</p>
+<h4 id="At-Last"><a href="#At-Last" class="headerlink" title="At Last"></a>At Last</h4><p>实践中,我还是觉得使用<code>gem</code>之前,最好再安装一个<code>Ruby</code>版本,避免在系统根目录中的Ruby文件夹删删改改,要知道万一你不小心<code>rm -rf</code>删错了一个文件,后果就严重了.</p>
+<p>而且,由于现在的MacOS对系统文件的管理限制更加严格,使用系统的RubyGem安装工具的时候随时会遇到permissions denied,很尴尬🙄.</p>
+</section>
+    
+    <div class="money-like">
+      <div class="reward-btn">
+        赏
+        <span class="money-code">
+          <span class="alipay-code">
+            <div class="code-image"></div>
+            <b>使用支付宝打赏</b>
+          </span>
+          <span class="wechat-code">
+            <div class="code-image"></div>
+            <b>使用微信打赏</b>
+          </span>
+        </span>
+      </div>
+      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+    </div>
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    
+      <div id="comments"></div>
+    
+  </article>
+</main>
+
+<script>
+  (function () {
+    var url = 'http://codermario.me/2017/08/18/Mac下多Ruby环境的坑/';
+    $('#article-banner').geopattern(url)
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      var imageW = $(this).width()
+      var imageH = $(this).height()
+      
+      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+      zoom = zoom < 1 ? 1 : zoom
+      zoom = zoom > 2 ? 2 : zoom
+      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+      $('.image-view-wrap').addClass('wrap-active')
+      $('.image-view-wrap img').css({
+        'width': `${imageW}`,
+        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+      })
+      $('html').css('overflow', 'hidden')
+
+      $('.image-view-wrap').on('click', function() {
+        $(this).remove()
+        $('html').attr('style', '')
+      })
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "weelh";
+    if (gitmentConfig != "undefined") {
+      var gitment = new Gitment({
+        id: "",
+        owner: "weelh",
+        repo: "weelh.github.io",
+        oauth: {
+          client_id: "d5e506a92cc002327d0c",
+          client_secret: "e2b05915e16252b0e7f5e643032b9c3f76efc2b9"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'a59fc3b35aa0663799f66f93f31ad9eb';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+  </body>
+</html>
