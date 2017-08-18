@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="iOS Developer">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  <title>
+    
+      使用kcptun加速搬瓦工VPS | Mario&#39;s Space
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+</head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Mario's Space</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>使用kcptun加速搬瓦工VPS</h2>
+  <p class="post-date">2017-08-08</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body">
+  <article class="post-article">
+    <section class="markdown-content"><p>我的搬瓦工VPS使用过<strong>finalspeed</strong>加速,加速一般,而且要配合客户端使用.</p>
+<p>后面用 <strong>net-speed</strong>,后面速度也不行了…</p>
+<p>如今用了<strong>kcptun</strong>, 才体会到了飞一般的速度!</p>
+<p>以下以搬瓦工contOS 64位系统为例:</p>
+<p>假设你的shadowsock地址为: <strong>23.106.147.91</strong>端口为:<strong>444</strong></p>
+<h2 id="部署服务端"><a href="#部署服务端" class="headerlink" title="部署服务端"></a>部署服务端</h2><p>kcptun地址 <a href="https://github.com/xtaci/kcptun/releases" target="_blank" rel="external">https://github.com/xtaci/kcptun/releases</a>, 按需选择对应32或者64位版本.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mkdir /root/kcptun</div><div class="line"><span class="built_in">cd</span> /root/kcptun</div><div class="line">wget https://github.com/xtaci/kcptun/releases/download/v20170221/kcptun-linux-amd64-20170221.tar.gz</div><div class="line">tar -zxf kcptun-linux-amd64-20170221.tar.gz</div></pre></td></tr></table></figure>
+<p>创建 start.sh</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim /root/kcptun/start.sh</div></pre></td></tr></table></figure>
+<p>写入以下内容：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="built_in">cd</span> /root/kcptun/</div><div class="line">./server_linux_amd64 -c /root/kcptun/server-config.json 2&gt;&amp;1 &amp;</div><div class="line"><span class="built_in">echo</span> <span class="string">"Kcptun started."</span></div></pre></td></tr></table></figure>
+<p>创建配置文件server-config.json</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /root/kcptun/server-config.json</div></pre></td></tr></table></figure>
+<p>写入以下内容：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="string">"listen"</span>: <span class="string">":29900"</span>,</div><div class="line">    <span class="string">"target"</span>: <span class="string">"127.0.0.1:444"</span>,</div><div class="line">    <span class="string">"key"</span>: <span class="string">"test"</span>,</div><div class="line">    <span class="string">"crypt"</span>: <span class="string">"salsa20"</span>,</div><div class="line">    <span class="string">"mode"</span>: <span class="string">"fast2"</span>,</div><div class="line">    <span class="string">"mtu"</span>: 1350,</div><div class="line">    <span class="string">"sndwnd"</span>: 1024,</div><div class="line">    <span class="string">"rcvwnd"</span>: 1024,</div><div class="line">    <span class="string">"datashard"</span>: 70,</div><div class="line">    <span class="string">"parityshard"</span>: 30,</div><div class="line">    <span class="string">"dscp"</span>: 46,</div><div class="line">    <span class="string">"nocomp"</span>: <span class="literal">false</span>,</div><div class="line">    <span class="string">"acknodelay"</span>: <span class="literal">false</span>,</div><div class="line">    <span class="string">"nodelay"</span>: 0,</div><div class="line">    <span class="string">"interval"</span>: 40,</div><div class="line">    <span class="string">"resend"</span>: 0,</div><div class="line">    <span class="string">"nc"</span>: 0,</div><div class="line">    <span class="string">"sockbuf"</span>: 4194304,</div><div class="line">    <span class="string">"keepalive"</span>: 10,</div><div class="line">    <span class="string">"log"</span>: <span class="string">"/root/kcptun/kcptun.log"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>“listen”: “:29900” <strong>29900可以随便填写一个自己喜欢的</strong></li>
+<li>“target”: “127.0.0.1:444” <strong>127.0.0.1是写死的, 444换成你的ss的端口</strong></li>
+</ul>
+<p>创建 stop.sh</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /root/kcptun/stop.sh</div></pre></td></tr></table></figure>
+<p>写入以下内容</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"Stopping Kcptun..."</span></div><div class="line">PID=`ps -ef | grep server_linux_amd64 | grep -v grep | awk <span class="string">'&#123;print $2&#125;'</span>`</div><div class="line"><span class="keyword">if</span> [ <span class="string">""</span> !=  <span class="string">"<span class="variable">$PID</span>"</span> ]; <span class="keyword">then</span></div><div class="line">  <span class="built_in">echo</span> <span class="string">"killing <span class="variable">$PID</span>"</span></div><div class="line">  <span class="built_in">kill</span> -9 <span class="variable">$PID</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"Kcptun stoped."</span></div></pre></td></tr></table></figure>
+<p>创建 restart.sh</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /root/kcptun/stop.sh</div></pre></td></tr></table></figure>
+<p>写入以下内容</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="built_in">cd</span> /root/kcptun/</div><div class="line">sh stop.sh</div><div class="line"><span class="built_in">echo</span> <span class="string">"Restarting Kcptun..."</span></div><div class="line">sh start.sh</div></pre></td></tr></table></figure>
+<p>启动服务端</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/root/kcptun/start.sh</div></pre></td></tr></table></figure>
+<p>停止服务端</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/root/kcptun/stop.sh</div></pre></td></tr></table></figure>
+<p>重启服务端</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/root/kcptun/restart.sh</div></pre></td></tr></table></figure>
+<p>监听日志信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail -f /root/kcptun/kcptun.log</div></pre></td></tr></table></figure>
+<p>按 control + c 退出监听</p>
+<p>添加开机启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chmod +x /etc/rc.d/rc.local;echo &quot;sh /root/kcptun/start.sh&quot; &gt;&gt; /etc/rc.d/rc.local</div></pre></td></tr></table></figure>
+<h2 id="配置客户端"><a href="#配置客户端" class="headerlink" title="配置客户端"></a>配置客户端</h2><p>首先下载 Kcptun 的客户端文件,最好单独放到一个文件夹中</p>
+<p>Windows 和 Mac 按需<a href="https://github.com/xtaci/kcptun/releases" target="_blank" rel="external">下载</a>.</p>
+<p><strong>darwin即代表Mac版</strong></p>
+<p><strong>版本要和服务端一致. 服务端为v20170221, 这里也要20170221</strong></p>
+<p>下面要进行客户端配置,我选择的是GUI的方式,图形界面比较清晰. 你也可以选择用命令配置.</p>
+<p>参考这里:</p>
+<p><a href="https://blog.kuoruan.com/102.html" target="_blank" rel="external">小内存福音，Kcptun Shadowsocks加速方案</a></p>
+<p><a href="http://www.right.com.cn/forum/forum.php?mod=viewthread&amp;tid=202060" target="_blank" rel="external">在openwrt上部署kcptun给搬瓦工加速</a></p>
+<p>下载<a href="https://github.com/dfdragon/kcptun_xclient/releases" target="_blank" rel="external">Mac GUI</a>工具 或者 <a href="https://github.com/dfdragon/kcptun_gclient/releases" target="_blank" rel="external">Windows GUI</a>工具并安装</p>
+<p>设置看图:</p>
+<p><img src="http://7xpcfa.com1.z0.glb.clouddn.com/kcptun_GUI.png" alt=""></p>
+<ul>
+<li>点击1添加一个客户端</li>
+<li>点击2浏览,指定前面下载的Mac版客户端文件.</li>
+<li>3处<strong>随便填写</strong>一个端口.</li>
+<li>4处填写你的ss地址</li>
+<li>5处填写服务端配置文件<code>server-config.json</code>中的29900</li>
+<li>画圈圈打星星的部分,必须按照<code>server-config.json</code>配置文件中的填写.</li>
+</ul>
+<h2 id="Shadowsocks-客户端配置"><a href="#Shadowsocks-客户端配置" class="headerlink" title="Shadowsocks 客户端配置"></a>Shadowsocks 客户端配置</h2><p>在客户端中新建服务器：</p>
+<ul>
+<li>服务器 IP 填写本机：127.0.0.1 <strong>(此处写死,不要改😀)</strong></li>
+<li>服务器端口填写：8388  <strong>这个8388就是你上一步3处的本地侦听端口</strong></li>
+</ul>
+<p>正确填写你的 Shadowsocks 密码，加密方式，协议和混淆方式。</p>
+<p>切换到该服务器上，测试是否正确运行。</p>
+<p>全部OVER. </p>
+</section>
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#kcptun" >
+    <span class="tag-code">kcptun</span>
+  </a>
+
+  <a href="/tags#VPS" >
+    <span class="tag-code">VPS</span>
+  </a>
+
+      </div>
+    
+    <div class="money-like">
+      <div class="reward-btn">
+        赏
+        <span class="money-code">
+          <span class="alipay-code">
+            <div class="code-image"></div>
+            <b>使用支付宝打赏</b>
+          </span>
+          <span class="wechat-code">
+            <div class="code-image"></div>
+            <b>使用微信打赏</b>
+          </span>
+        </span>
+      </div>
+      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+    </div>
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    
+      <div id="comments"></div>
+    
+  </article>
+</main>
+
+<script>
+  (function () {
+    var url = 'http://codermario.me/2017/08/08/使用kcptun加速搬瓦工VPS/';
+    $('#article-banner').geopattern(url)
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      var imageW = $(this).width()
+      var imageH = $(this).height()
+      
+      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+      zoom = zoom < 1 ? 1 : zoom
+      zoom = zoom > 2 ? 2 : zoom
+      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+      $('.image-view-wrap').addClass('wrap-active')
+      $('.image-view-wrap img').css({
+        'width': `${imageW}`,
+        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+      })
+      $('html').css('overflow', 'hidden')
+
+      $('.image-view-wrap').on('click', function() {
+        $(this).remove()
+        $('html').attr('style', '')
+      })
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "weelh";
+    if (gitmentConfig != "undefined") {
+      var gitment = new Gitment({
+        id: "使用kcptun加速搬瓦工VPS",
+        owner: "weelh",
+        repo: "weelh.github.io",
+        oauth: {
+          client_id: "d5e506a92cc002327d0c",
+          client_secret: "e2b05915e16252b0e7f5e643032b9c3f76efc2b9"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'a59fc3b35aa0663799f66f93f31ad9eb';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+  </body>
+</html>
