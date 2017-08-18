@@ -118,7 +118,7 @@
 <ol>
 <li>前提是Mac已经安装了homebrew这个插件管理器,没有的话,还是建议装上,炒鸡方便;没有安装? 一句命令搞定.<br><code>/usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)</code></li>
 <li>安装tree<br><code>brew install tree</code></li>
-<li><code>CD</code>到想要输出文档目录的地方,执行命令<code>tree</code>, 会把当前目录所有深度下的文件都遍历出来,但是我们通常只用输出目录,下面就用到了几个常用的命令:<br><code>tree -d</code> =&gt; 这里-d指的是directory，也就是只输出目录路径格式;<br><code>tree -L 2</code> =&gt; 输出文件夹遍历层数;</li>
+<li><code>CD</code>到想要输出文档目录的地方,执行命令<code>tree</code>, 会把当前目录所有深度下的文件都遍历出来,但是我们通常只用输出目录,下面就用到了几个常用的命令:<br><code>tree -d</code> =&gt; 这里-d指的是directory，也就是只输出目录路径格式;<br> <code>tree -L 2</code> =&gt; 输出文件夹遍历层数;</li>
 </ol>
 <p>像下面这样:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">.   SDK主目录</div><div class="line">├── IMSDK   SDK代码目录</div><div class="line">│   ├── IMSDK.h SDK对外暴露集合头文件</div><div class="line">│   ├── include     SDK对外暴露文件(可以含m文件)</div><div class="line">│   │   ├── IMPublicClass.h</div><div class="line">│   │   ├── IMPublicClass.m</div><div class="line">│   │   ├── IMPublicMethods.h</div><div class="line">│   │   └── IMPublicMethods.m</div><div class="line">│   └── src     SDK内部实现文件</div><div class="line">│       ├── IMPrivateClass.h</div><div class="line">│       ├── IMPrivateClass.m</div><div class="line">│       ├── IMPublicMethods+Private.h</div><div class="line">│       └── IMPublicMethods+Private.m</div><div class="line">├── IMSDK.podspec   SDK发布自描述文件</div><div class="line">├── IMSDK.xcodeproj SDK工程文件</div><div class="line">│   └── project.pbxproj</div><div class="line">├── IMSDK.xcworkspace   SDK（依赖库集成）编译工作区间</div><div class="line">│   └── contents.xcworkspacedata</div><div class="line">├── IMSDKBundle     SDK资源bundle</div><div class="line">│   ├── Info.plist</div><div class="line">│   └── topnav_bkg.png</div><div class="line">├── IMSDKTests      SDK单元测试</div><div class="line">│   ├── IMCommonTests.m</div><div class="line">│   └── Info.plist</div><div class="line">├── Build.sh    SDK framework生成脚本</div><div class="line">├── CHANGES     版本更新记录文件</div><div class="line">└── Podfile     SDK依赖描述文件</div></pre></td></tr></table></figure></p>
 </section>
@@ -126,12 +126,8 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#iOS" >
-    <span class="tag-code">iOS</span>
-  </a>
-
-  <a href="/tags#命令行" >
-    <span class="tag-code">命令行</span>
+  <a href="/tags#Terminal" >
+    <span class="tag-code">Terminal</span>
   </a>
 
       </div>

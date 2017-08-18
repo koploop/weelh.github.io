@@ -121,9 +121,9 @@
 <li>在gitlab上建立私有的podspec库(<code>XPrivatePods</code>);</li>
 <li>使用命令在<code>cocoapods/repo</code>目录下创建本地私有的spec repo(XPrivatePods);<br><code>pod repo add XPrivatePods SOURCE_URL</code></li>
 <li>在XCommonSDK目录建立<code>XCommon.podspec</code>文件并编辑;</li>
-<li>使用命令检验一下spec文件和SDK是否合格（其实这一步不需要也行，因为有时候当你的podspec中依赖了其他的私有库，这一步是无论如何都无法通过的）<br> <code>pod lib lint</code></li>
+<li>使用命令检验一下spec文件和SDK是否合格（其实这一步不需要也行，因为有时候当你的podspec中依赖了其他的私有库，这一步是无论如何都无法通过的）<br><code>pod lib lint</code></li>
 <li>合格之后,将代码提交到<code>XCommonSDK</code>仓库,并且生成一个tag 1.0.0;</li>
-<li>接下来开始向XPrivatePods提交podspec文件（或者直接将文件加入到XPrivatePods目录下，然后执行git push）;<br> <code>pod repo push XPrivatePods XCommonSDK.podspec</code><br>– 完成.</li>
+<li>接下来开始向XPrivatePods提交podspec文件（或者直接将文件加入到XPrivatePods目录下，然后执行git push）;<br><code>pod repo push XPrivatePods XCommonSDK.podspec</code><br>– 完成.</li>
 </ol>
 <h2 id="问题汇总"><a href="#问题汇总" class="headerlink" title="问题汇总"></a>问题汇总</h2><p>一般情况下,XCommonSDK库中会有两个文件夹<code>SDK</code>和<code>Demo</code>以及readme和license文件等;Demo里面放上演示的Demo,SDK中放我们的SDK,而我们的podspec文件就要放在SDK根目录中; 在写podspec文件的时候,也是一堆的吭啊~其实如果简单的按照网上的教程做下去大部分好像也没问题,但是如果自己想做的时候,目录结构稍微不一样,就会有一大堆坑,所以一定要<strong>理解podspec文件</strong>;问题的根源主要集中在<code>spec.source</code>和<code>spec.source_files</code>以及<code>spec.resource_bundles</code>这三个地方.</p>
 <hr>
@@ -157,10 +157,6 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#iOS" >
-    <span class="tag-code">iOS</span>
-  </a>
-
   <a href="/tags#CocoaPods" >
     <span class="tag-code">CocoaPods</span>
   </a>
