@@ -125,6 +125,8 @@
 <p>这里讲第二种方法.</p>
 <h4 id="安装RVM-Ruby-Version-Manager"><a href="#安装RVM-Ruby-Version-Manager" class="headerlink" title="安装RVM (Ruby Version Manager)"></a>安装RVM (Ruby Version Manager)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl -L get.rvm.io | bash -s stable</div></pre></td></tr></table></figure>
 <h4 id="安装Ruby"><a href="#安装Ruby" class="headerlink" title="安装Ruby"></a>安装Ruby</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">rvm list known  	// 列出ruby可安装的版本信息</div><div class="line">rvm install 2.4.0 	// 安装一个ruby版本</div><div class="line">rvm list 			// 查看已安装的ruby</div><div class="line">rvm remove 2.4.0	// 卸载一个已安装ruby版本</div></pre></td></tr></table></figure>
+<p>Tips: 如果<code>rvm install 2.4.0</code>执行很慢的话,按<code>control + c</code>停止,我们要修改下安装源.执行下面这句:</p>
+<p><code>echo &quot;ruby_url=&lt;https://cache.ruby-china.org/pub/ruby&gt;&quot; &gt; ~/.rvm/user/db</code></p>
 <h4 id="切换Ruby版本"><a href="#切换Ruby版本" class="headerlink" title="切换Ruby版本"></a>切换Ruby版本</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">rvm use system 			// 使用系统的ruby</div><div class="line">rvm use 2.4.0  			// 使用安装的ruby</div><div class="line"></div><div class="line">rvm use 2.4.0 --default	// 设置默认版本</div></pre></td></tr></table></figure>
 <p><strong>Explain</strong></p>
 <p>由于gem本质上用来管理和分发Ruby程序的包管理工具,是属于Ruby标准库的一部分.</p>
