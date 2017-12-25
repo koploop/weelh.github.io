@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="iOS Developer">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  <title>
+    
+      Swift中的weak和unowned | Mario&#39;s Space
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+</head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Mario's Space</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Swift中的weak和unowned</h2>
+  <p class="post-date">2016-12-25</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body">
+  <article class="post-article">
+    <section class="markdown-content"><p>Swift中的weak 和 unowned</p>
+<p>从Swift 3 开始,闭包默认都是非逃逸(<code>@noescaping</code>)的,如果要标明一个逃逸闭包,需要使用<code>@escaping</code>.</p>
+<p>所谓逃逸闭包,就是指闭包是在函数执行完毕之后,才被调用.这个时候,由于函数执行完毕,很有可能函数中的变量,整个函数,甚至整个Class(self),都已经被释放,此时如果在闭包中再使用这些变量,或者调用self,就可能发生崩溃. 所以要使用weak和unowned.</p>
+<p>Example:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">classEntity</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="keyword">var</span> aString = <span class="string">"String"</span></div><div class="line">        <span class="comment">// 一个异步执行的任务</span></div><div class="line">        <span class="function"><span class="keyword">func</span> <span class="title">doSomethingAsync</span><span class="params">(completion: @escaping <span class="params">()</span></span></span> -&gt; ()) &#123;</div><div class="line">            <span class="type">DispatchQueue</span>.main.async &#123;</div><div class="line">                completion()</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">     </div><div class="line">        <span class="function"><span class="keyword">func</span> <span class="title">excuteMethod1</span><span class="params">()</span></span> &#123;</div><div class="line">            <span class="built_in">print</span>(<span class="string">"First print: /(aString)"</span>)</div><div class="line">            doSomethingAsync &#123;</div><div class="line">                <span class="built_in">print</span>(<span class="string">"Async work print: /(self.aString)"</span>)</div><div class="line">            &#125;</div><div class="line">            aString = <span class="string">"another String"</span></div><div class="line">            <span class="built_in">print</span>(<span class="string">"Last print: /(aString)"</span>)</div><div class="line">        &#125;</div><div class="line">  	     <span class="comment">//First print: String</span></div><div class="line">  		<span class="comment">//Last print: another String</span></div><div class="line">  		<span class="comment">//Async work print: another String</span></div><div class="line">  </div><div class="line">  		<span class="function"><span class="keyword">func</span> <span class="title">excuteMethod2</span><span class="params">()</span></span> &#123;</div><div class="line">            <span class="built_in">print</span>(<span class="string">"First print: /(aString)"</span>)</div><div class="line">            doSomethingAsync &#123; [<span class="keyword">weak</span> <span class="keyword">self</span>] <span class="number">_</span> <span class="keyword">in</span></div><div class="line">                <span class="built_in">print</span>(<span class="string">"Async work print: /(self?.aString)"</span>) <span class="comment">//optional</span></div><div class="line">            &#125;</div><div class="line">            aString = <span class="string">"another String"</span></div><div class="line">            <span class="built_in">print</span>(<span class="string">"Last print: /(aString)"</span>)</div><div class="line">        &#125;</div><div class="line">  		<span class="comment">//First print: String</span></div><div class="line">  		<span class="comment">//Last print: another String</span></div><div class="line">  		<span class="comment">//Async work print: nil</span></div><div class="line">  </div><div class="line">  		<span class="function"><span class="keyword">func</span> <span class="title">excuteMethod3</span><span class="params">()</span></span> &#123;</div><div class="line">            <span class="built_in">print</span>(<span class="string">"First print: /(aString)"</span>)</div><div class="line">            doSomethingAsync &#123; [<span class="keyword">unowned</span> <span class="keyword">self</span>] <span class="number">_</span> <span class="keyword">in</span></div><div class="line">                <span class="built_in">print</span>(<span class="string">"Async work print: /(self.aString)"</span>) <span class="comment">//must not be optional</span></div><div class="line">            &#125;</div><div class="line">            aString = <span class="string">"another String"</span></div><div class="line">            <span class="built_in">print</span>(<span class="string">"Last print: /(aString)"</span>)</div><div class="line">        &#125;</div><div class="line">  		<span class="comment">//First print: String</span></div><div class="line">  		<span class="comment">//Last print: another String</span></div><div class="line">  		<span class="comment">//Async work print: another String</span></div><div class="line">     &#125;</div></pre></td></tr></table></figure>
+<p>我们先定义了一个变量<code>aString</code>和异步任务<code>doSomethingAsync</code>.</p>
+<p>在<code>excuteMethod1</code>和<code>excuteMethod2</code>两个函数中,<code>doSomethingAsync</code>都是在函数执行完毕最后一行代码之后才打印输出的,所以我们要标记<code>completion</code>为一个逃逸闭包.</p>
+<p><code>excuteMethod1</code>打印出的<code>aString = another String</code>,是因为闭包中持有了self,这导致了self不会被释放,所以闭包执行的时候可以打印出来值. 但是self不会释放就会造成循环引用和内存泄漏. </p>
+<p><code>excuteMethod2</code>打印出的<code>aString = nil</code>,是因为使用了<code>[weak self]</code>,所以闭包并不会持有self,那么函数执行完毕之后,闭包对实例的引用就没了,这时候再去打印<code>self.aString</code>自然就为<code>nil</code></p>
+<p><code>excuteMethod3</code>打印出的<code>aString = another String</code>,是因为使用了<code>[unowned self]</code>. 用<code>unowned</code>的话，即使闭包原来引用的内容被释放了，它仍然会保持对被已经释放了的对象的一个引用，它不能是Optional也不能是nil值，这个时候就会出现一个问题，如果你调用了引用内容或者访问成员属性的话，就会出现崩溃.我们这里self并没有被释放,所以并不会崩溃.</p>
+<p>可以看到使用<code>weak</code>相对友善和温柔的,在引用的内容被释放之后,使用<code>[weak self]</code>会自动将<code>weak</code>的成员标记为<code>nil</code>而不会崩溃. 那为什么还要使用<code>unowned</code>? 当然,你可以尽量的不去使用它, Apple给我们的建议是如果能够确定访问时不会被释放的话, 尽量用<code>unowned</code>, 如果存在被释放的可能性的话, 就用weak</p>
+</section>
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Swift" >
+    <span class="tag-code">Swift</span>
+  </a>
+
+      </div>
+    
+    <div class="money-like">
+      <div class="reward-btn">
+        赏
+        <span class="money-code">
+          <span class="alipay-code">
+            <div class="code-image"></div>
+            <b>使用支付宝打赏</b>
+          </span>
+          <span class="wechat-code">
+            <div class="code-image"></div>
+            <b>使用微信打赏</b>
+          </span>
+        </span>
+      </div>
+      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+    </div>
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    
+      <div id="comments"></div>
+    
+  </article>
+</main>
+
+<script>
+  (function () {
+    var url = 'http://codermario.me/2016/12/25/Swift中的weak 和 unowned/';
+    $('#article-banner').geopattern(url)
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      var imageW = $(this).width()
+      var imageH = $(this).height()
+      
+      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+      zoom = zoom < 1 ? 1 : zoom
+      zoom = zoom > 2 ? 2 : zoom
+      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+      $('.image-view-wrap').addClass('wrap-active')
+      $('.image-view-wrap img').css({
+        'width': `${imageW}`,
+        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+      })
+      $('html').css('overflow', 'hidden')
+
+      $('.image-view-wrap').on('click', function() {
+        $(this).remove()
+        $('html').attr('style', '')
+      })
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "weelh";
+    if (gitmentConfig != "undefined") {
+      var gitment = new Gitment({
+        id: "Swift中的weak和unowned",
+        owner: "weelh",
+        repo: "weelh.github.io",
+        oauth: {
+          client_id: "d5e506a92cc002327d0c",
+          client_secret: "e2b05915e16252b0e7f5e643032b9c3f76efc2b9"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'a59fc3b35aa0663799f66f93f31ad9eb';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

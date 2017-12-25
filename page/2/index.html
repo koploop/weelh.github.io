@@ -108,6 +108,74 @@
   
     <article class="article-card">
       <h2 class="article-head">
+        <a href="/2016/12/25/Swift中的weak 和 unowned/">Swift中的weak和unowned</a>
+      </h2>
+      <p class="article-date">December 25, 2016</p>
+      
+        
+  <a href="/tags#Swift" >
+    <span class="tag-code">Swift</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          Swift中的weak 和 unowned
+从Swift 3 开始,闭包默认都是非逃逸(@noescaping)的,如果要标明一个逃逸闭包,需要使用@escaping.
+所谓逃逸闭包,就是指闭包是在函数执行完毕之后,才被调用.这个时候,由于函数执行完毕,很有可能函数中的变量,整个函数,甚至整 ...
+        
+      </div>
+      <a class="more" href="/2016/12/25/Swift中的weak 和 unowned/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2016/12/05/组件化学习和JLRoutes的使用/">组件化学习和JLRoutes的使用</a>
+      </h2>
+      <p class="article-date">December 5, 2016</p>
+      
+        
+  <a href="/tags#组件化" >
+    <span class="tag-code">组件化</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          <p>JLRoute可以看做是一个路由调度器，通过注册路由地址（URL），进而实现对不同的URL做出反应，最重要的是它可以帮助我们解析出URL中的所有参数，只需要在注册的时候定义一些key，就可以在Block中通过这些key拿到参数。<br>
+        
+      </div>
+      <a class="more" href="/2016/12/05/组件化学习和JLRoutes的使用/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2016/11/20/Swift闭包的简写/">Swift 闭包的简写</a>
+      </h2>
+      <p class="article-date">November 20, 2016</p>
+      
+        
+  <a href="/tags#Swift" >
+    <span class="tag-code">Swift</span>
+  </a>
+
+  <a href="/tags#闭包" >
+    <span class="tag-code">闭包</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          
+最辣眼睛(繁琐)
+1234let addClosure: (_ num1: Int, _ num2: Int) -&gt; (Int)addClosure = &#123;(_ num1: Int, _ num2: Int) -&gt; (Int) in	return num1 + num ...
+        
+      </div>
+      <a class="more" href="/2016/11/20/Swift闭包的简写/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
         <a href="/2016/11/11/Xcode调试技巧之lldb中导入UIKit/">Xcode调试技巧之lldb中导入UIKit</a>
       </h2>
       <p class="article-date">November 11, 2016</p>
@@ -125,6 +193,33 @@
         
       </div>
       <a class="more" href="/2016/11/11/Xcode调试技巧之lldb中导入UIKit/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2016/10/20/定义一个类属性/">类属性</a>
+      </h2>
+      <p class="article-date">October 20, 2016</p>
+      
+        
+  <a href="/tags#类属性" >
+    <span class="tag-code">类属性</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          类属性Xcode现以支持类属性,据说是为了向Swift看齐,对开发来说,蛮不错的.
+创建一个类属性
+
+你需要为类属性创建一个存储变量，通常为全局变量. 
+类属性需要手动实现setter 和 getter方法. 如果是只读属性,实现getter方法即可
+
+ExampleClass.h
+1234 ...
+        
+      </div>
+      <a class="more" href="/2016/10/20/定义一个类属性/">Read more</a>
     </article>
   
     <article class="article-card">
@@ -273,96 +368,6 @@ ctrl+r
         
       </div>
       <a class="more" href="/2016/05/01/使用Xcode7生成动态库/">Read more</a>
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head">
-        <a href="/2016/05/01/利用Dispatch Group解决多个网络请求异步执行/">利用Dispatch Group解决多个网络请求异步执行</a>
-      </h2>
-      <p class="article-date">May 1, 2016</p>
-      
-        
-  <a href="/tags#GCD" >
-    <span class="tag-code">GCD</span>
-  </a>
-
-      
-      <div class="article-summary">
-        
-          <p>需求如下:点击一个按钮,发送多个网络请求N1,N2,N3,当这些网络请求全部返回之后,再调起某方法function A.  这里可以利用Dispatch Group来解决.<br>
-        
-      </div>
-      <a class="more" href="/2016/05/01/利用Dispatch Group解决多个网络请求异步执行/">Read more</a>
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head">
-        <a href="/2016/04/01/NULL:NSNull:nil:Nil的区别与联系/">NULL/NSNull/nil/Nil的区别与联系</a>
-      </h2>
-      <p class="article-date">April 1, 2016</p>
-      
-        
-  <a href="/tags#OC" >
-    <span class="tag-code">OC</span>
-  </a>
-
-      
-      <div class="article-summary">
-        
-          NULL/NSNull/nil/Nil的区别与联系首先我们来看一下苹果文档中对于这几种概念的说明:
-
-1.NULL:由于OC来源于C,所以保留了这一标示,用0表示nothing的原始值,用NULL表示nothing的指针,所以我们可以这样理解0和NULL所表达的字面意思是完全一样的,只不过一 ...
-        
-      </div>
-      <a class="more" href="/2016/04/01/NULL:NSNull:nil:Nil的区别与联系/">Read more</a>
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head">
-        <a href="/2016/03/10/获取CollectionView的contentSize/">获取CollectionView的contentSize</a>
-      </h2>
-      <p class="article-date">March 10, 2016</p>
-      
-        
-  <a href="/tags#OC" >
-    <span class="tag-code">OC</span>
-  </a>
-
-      
-      <div class="article-summary">
-        
-          获取CollectionView的contentSize在控制器视图刚刚载入(viewDidLoad 或者viewWillAppear)的时候,此时正常的通过collectionView.contentSize是获取不到的.可以通过下面的方法获取
-12[self.view layoutIfN ...
-        
-      </div>
-      <a class="more" href="/2016/03/10/获取CollectionView的contentSize/">Read more</a>
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head">
-        <a href="/2016/03/06/四舍五入与进位/">iOS开发中的四舍五入/进位/摸位</a>
-      </h2>
-      <p class="article-date">March 6, 2016</p>
-      
-        
-  <a href="/tags#OC" >
-    <span class="tag-code">OC</span>
-  </a>
-
-      
-      <div class="article-summary">
-        
-          iOS开发中的四舍五入、进位、摸位
-四舍五入比较简单:
-
-123double number;float result1 = rounding(number, 2);//保留两位int result2 = (int)roundf(number);
-
-进位方法:
-
-12345float numb ...
-        
-      </div>
-      <a class="more" href="/2016/03/06/四舍五入与进位/">Read more</a>
     </article>
   
 
