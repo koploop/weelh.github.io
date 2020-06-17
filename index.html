@@ -108,6 +108,99 @@
   
     <article class="article-card">
       <h2 class="article-head">
+        <a href="/2018/01/21/HTTP杂记2/">HTTP杂记2</a>
+      </h2>
+      <p class="article-date">January 21, 2018</p>
+      
+        
+  <a href="/tags#网络" >
+    <span class="tag-code">网络</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          TCP/IP协议是互联网中最基本的协议,当说起TCP/IP的时候,通常我们都是在说整个网络协议栈, 他是数据传输中不同层次上的协议组合, 我们通常把它分成四层,对应的是 OSI 7 层模型. (有些文章将TCP/IP协议栈分为5层,是将最层的网络接口层拆分成数据链路层和物理层, 对应OSI, ...
+        
+      </div>
+      <a class="more" href="/2018/01/21/HTTP杂记2/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2018/01/20/HTTP杂记/">HTTP杂记</a>
+      </h2>
+      <p class="article-date">January 20, 2018</p>
+      
+        
+  <a href="/tags#网络" >
+    <span class="tag-code">网络</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          HTTP初探Request由三部分组成: RequestLine + CRLF + Header + CRLF + Body(可选).
+使用Wireshark抓包可以看到 CRLF 其实就是 \r\n 对应ASCII码的回车和换行. (如果使用Charles抓包, 我们只能看到解析并且格式化 ...
+        
+      </div>
+      <a class="more" href="/2018/01/20/HTTP杂记/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/12/08/JavaScript与原生的交互/">JavaScript与原生的交互</a>
+      </h2>
+      <p class="article-date">December 8, 2017</p>
+      
+        
+  <a href="/tags#iOS" >
+    <span class="tag-code">iOS</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          分为UIWebView和WKWebView
+【UIWebView】方法一： 通过拦截Url实现。
+JS调用原生
+
+JS和原生约定好要调用的方法名或者scheme；
+在UIWebView的 shouldStartLoadWithRequest 方法中拦截Url，判断如果是约定好的Url，就执行 ...
+        
+      </div>
+      <a class="more" href="/2017/12/08/JavaScript与原生的交互/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/11/16/简述App签名原理/">简述App签名原理</a>
+      </h2>
+      <p class="article-date">November 16, 2017</p>
+      
+        
+  <a href="/tags#iOS" >
+    <span class="tag-code">iOS</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          签名目的，确保代码是经过项目持有人修改和审查的，是被苹果签名信任的，安全的App。
+涉及到 非对称加密， 数字签名。
+数字签名和加密一样，不同之处是一个是数据加密，一个是只签名。
+
+申请证书
+
+在你的 Mac 生成一对公私钥，这里称为公钥 L，私钥 L’ ；
+对应的是 keychain 里的 ...
+        
+      </div>
+      <a class="more" href="/2017/11/16/简述App签名原理/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
         <a href="/2017/10/05/修改你的Git Commit Date/">修改Git Commit Date</a>
       </h2>
       <p class="article-date">October 5, 2017</p>
@@ -241,100 +334,6 @@ xcodebuild可选参数 (使用 xcodebuild -help 查看, ...
         
       </div>
       <a class="more" href="/2017/07/02/一次更换Hexo主题的痛苦经历/">Read more</a>
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head">
-        <a href="/2017/06/10/runtime替换类方法和实例方法的区别/">runtime替换类方法和实例方法的区别</a>
-      </h2>
-      <p class="article-date">June 10, 2017</p>
-      
-        
-  <a href="/tags#OC" >
-    <span class="tag-code">OC</span>
-  </a>
-
-      
-      <div class="article-summary">
-        
-          runtime替换类方法和实例方法的区别
-替换实例方法
-
-12345678910111213141516171819//获取原始方法和要替换的方法(public方法)SEL originalPaySel = @selector(...);SEL swizzledPaySel = @selec ...
-        
-      </div>
-      <a class="more" href="/2017/06/10/runtime替换类方法和实例方法的区别/">Read more</a>
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head">
-        <a href="/2017/05/08/如何写一个参数不定的函数/">如何写一个参数不定的函数</a>
-      </h2>
-      <p class="article-date">May 8, 2017</p>
-      
-        
-  <a href="/tags#OC" >
-    <span class="tag-code">OC</span>
-  </a>
-
-      
-      <div class="article-summary">
-        
-          如何写一个参数不定的函数先来看一下Foundation中创建一个数组的写法
-1NSArray *arr = [NSArray arrayWithObjects:id , nil];
-这其中最后一个nil是告诉函数参数已经没了.我们自己在自定义的时候有时候也会遇到这样的需求,那么怎么定义一个这 ...
-        
-      </div>
-      <a class="more" href="/2017/05/08/如何写一个参数不定的函数/">Read more</a>
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head">
-        <a href="/2017/04/17/增删改查Linux命令/">增删改查Linux命令</a>
-      </h2>
-      <p class="article-date">April 17, 2017</p>
-      
-        
-  <a href="/tags#Terminal" >
-    <span class="tag-code">Terminal</span>
-  </a>
-
-      
-      <div class="article-summary">
-        
-          mkdir可选参数
-
--p (— parents)  若路径中目录不存在,则创建该目录.
-
-可以递归建立那些尚不存在的目录,即一次建立多个
-Ex: mkdir -p submodule/test  一次创建submodule和test两个文件夹
-rm删除一个目录中的一个或多个文件或目录，如果 ...
-        
-      </div>
-      <a class="more" href="/2017/04/17/增删改查Linux命令/">Read more</a>
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head">
-        <a href="/2017/02/01/队列/">GCD in Swift3</a>
-      </h2>
-      <p class="article-date">February 1, 2017</p>
-      
-        
-  <a href="/tags#Swift" >
-    <span class="tag-code">Swift</span>
-  </a>
-
-      
-      <div class="article-summary">
-        
-          今天,我们重新使用 Swift 来复习一遍 GCD 的基本用法. 当然,它适合像我这样由Objective-C转入Swift的入门者,也同样适用iOS入门者,毕竟,很多人现在依然搞不清队列,线程和任务的区别呢. 
-创建串行与并行队列使用GCD创建一个队列: 
-Objective-C
-1234 ...
-        
-      </div>
-      <a class="more" href="/2017/02/01/队列/">Read more</a>
     </article>
   
 

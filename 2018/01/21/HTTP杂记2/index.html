@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="iOS Developer">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  <title>
+    
+      HTTP杂记2 | Mario&#39;s Space
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+</head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Mario's Space</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>HTTP杂记2</h2>
+  <p class="post-date">2018-01-21</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body">
+  <article class="post-article">
+    <section class="markdown-content"><p>TCP/IP协议是互联网中最基本的协议,当说起TCP/IP的时候,通常我们都是在说整个网络协议栈, 他是数据传输中不同层次上的协议组合, 我们通常把它分成<strong>四层</strong>,对应的是 <strong>OSI 7 层模型</strong>. (有些文章将TCP/IP协议栈分为5层,是将最层的网络接口层拆分成数据链路层和物理层, 对应OSI, 本质是一样的.)</p>
+<p><img src="https://markdown-images.oss-cn-hangzhou.aliyuncs.com/TCP111111.png" style="zoom:40%"></p>
+<p>如图所示,</p>
+<ul>
+<li>应用层中,我们常用的HTTP, FTP, SMTP等协议就在这里.</li>
+<li>传输层, 包含了著名的TCP 和 UDP协议;</li>
+<li>网络层,是IP协议所在地方,它负责给数据加上目标地址;</li>
+<li>最后的数据链路层,负责数据转化光信号前的准备,为数据加上以太网协议头,进行编码等;</li>
+</ul>
+<p><br></p>
+<p>可以看到,我们在应用层的数据,在进入光纤传播之前,需要通过 <code>传输层 -&gt; 网络层 -&gt; 数据链路层</code> 层层的转化,经过每一层都会进行一次封装,其实就是加上一层Header. 关于Header的具体准确叫法,英文中如下所说:</p>
+<blockquote>
+<p>应用层（HTTP）的数据在经过传输层（TCP Layer）的时候，会加上 TCP 的 header，成为一个 TCP Segment。</p>
+<p>传输层（TCP）的 Segment 在经过网络层（IP Layer）的时候，会加上 IP 的 header，成为一个 IP Packet。</p>
+<p>网络层的 IP Packet 在经过链路层（Link Layer）的时候，会加上Link Layer 的 header，成为一个 Frame。</p>
+<p>最后 Frame 会在物理层，将数字信号转化为物理信号传输。</p>
+</blockquote>
+<p><br></p>
+<p>对照下图:</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&gt; +-------------+-------------------------+</div><div class="line">&gt; | Application |  HTTP Packet            |</div><div class="line">&gt; +-------------+-------------------------+</div><div class="line">&gt; | Transport   |  TCP Segment            |</div><div class="line">&gt; +-------------+-------------------------+</div><div class="line">&gt; | Network     |  IP Packet              |</div><div class="line">&gt; +-------------+-------------------------+</div><div class="line">&gt; | Link        |  Frame                  | </div><div class="line">&gt; +-------------+-------------------------+         光纤</div><div class="line">&gt; | Physical    |  Bits                   | ====================&gt; </div><div class="line">&gt; +-------------+-------------------------+</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</blockquote>
+<p>&gt;</p>
+<blockquote>
+<p>引用:  @Peak君 <code>http://mrpeak.cn/blog/tcp-headers/</code></p>
+</blockquote>
+<p><br></p>
+<p>数据发送的时候,Client端加上层层Header, Service端接收到之后,拆开Header,最终到达应用层:</p>
+<p><img src="https://markdown-images.oss-cn-hangzhou.aliyuncs.com/TCP11.png" style="zoom:50%"></p>
+<p>学习TCP其实就是学习每一层的Header,了解每一层加了什么东西,分别有什么用.</p>
+<p>这其中最为关键的自然是TCP协议所在的传输层,它包含的知识点有<strong>TCP建立连接的三次握手</strong>和<strong>断开连接的四次挥手</strong>,流量控制等;  其次IP协议所在的网络层也很重要,我们要知道数据是如何在这里被确定源目标和传输目标的.</p>
+<p>每一层中的每一个协议都是复杂的,《TCP/IP 详解》足足有3卷, 好几千页,肯定不是谁几遍文章就能说的清楚的. 我们这里只是记录个梗概,作为了解,面试备用;-)</p>
+<h2 id="数据链路层-包括物理层"><a href="#数据链路层-包括物理层" class="headerlink" title="数据链路层(包括物理层)"></a>数据链路层(包括物理层)</h2><p>数据链路层将来自IP层的Packet封装成Frame. 这其中增加了源MAC地址和目的MAC地址. </p>
+<p>物理层负责将Frame(帧)转化为高低电压和光信号,进入光纤传播;</p>
+<h2 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h2><p>网络层主要负责将来自传输层的Segment封装成Packet. 这其中主要是根据IP协议来完成;</p>
+<h4 id="IP协议"><a href="#IP协议" class="headerlink" title="# IP协议"></a># IP协议</h4><p>互联网是一个二级结构,第一级是无数的子网, 第二级是子网中的设备.  数据的传输要依靠IP地址, 所以一个IP地址的构成也就包含了两部分:</p>
+<blockquote>
+<p>IP 地址 = 网络地址 + 主机地址</p>
+<p>IP Address = Network ID + Host ID</p>
+</blockquote>
+<p>对于IPv4来说,一个IP是32位 <em><a href="#zhu1">[注1]</a></em>, 那么根据什么规则将32bit位的IP地址切割成网络地址和主机地址呢? 答案是CIDR, 我们先不讲CIDR原理,先知道它是根据子网掩码来切割的就行. 先说结论:</p>
+<blockquote>
+<p>根据CIDR切割方式, 可以区分出网络地址和主机地址,同时根据切割出来的网络地址的不同,我们将IP分为三类,根据第一个字节的数字就可以判断出来:</p>
+<ol>
+<li>A类IP地址：1.0.0.0~127.0.0.0    (共126个子网,可容纳主机一亿多台子机;)</li>
+<li>B类IP地址：128.0.0.0~191.255.255.255    (共16382个子网, 每个子网可容纳6万多台子机)</li>
+<li>C类IP地址：192.0.0.0~223.255.255.255    (共209多万子网,每个子网可容纳254台子机)</li>
+</ol>
+</blockquote>
+<p>数据在IP层被打包成Packet，<em>（IP Header见 <a href="#zhu2">[注2]</a>）</em>，添加了源IP地址和目标IP地址，就可以根据IP的网络地址和主机地址进行寻址传输，那如何寻址呢？ 这里讲到IP地址分配和路由。</p>
+<p><br></p>
+<p><strong>IP地址分配</strong></p>
+<p>IP地址的分配是由一个叫 IANA 的国际机构统一分配的, 比如杭州的IP地址, 是经过了 <code>国际IANA -&gt; 亚洲APNIC -&gt; 中国CNNIC -&gt; 电信运营商 -&gt; 杭州地区...</code> 这么一种分配方式得来的.</p>
+<p><br></p>
+<p><strong>路由</strong></p>
+<p>有了IP地址,数据的传输就有了目的地,接下来开始在路由器之前穿梭了,那么如何找到对应的路由器,确定目标子机所在的路由呢? </p>
+<p>数据从Client端发出,我们需要知道它下一站应该被运送往哪里. 这里就要讲一下路由表的概念;</p>
+<p>网络上的路由设备,包括发送方,都存储着一张路由表,它记录着目标IP或者目标IP范围,对应的下一个网关.这样就可以知道,它的下一站应该被发往哪里.路由器的工作原理也大致如此. 这些路由表大部分是由算法生成,或者也可以静态配置.</p>
+<h4 id="ARP-RARP协议"><a href="#ARP-RARP协议" class="headerlink" title="# ARP/RARP协议"></a># ARP/RARP协议</h4><p>网络层最重要的当然是IP协议,但是ARP协议也是要知道的.ARP协议是一种地址解析协议.它根据目标IP地址获取目标主机的MAC地址.</p>
+<blockquote>
+<p>当主机要发送一个IP包的时候，会首先查一下自己的ARP高速缓存（就是一个IP-MAC地址对应表缓存）。如果查询的IP-MAC值对不存在，那么主机就向网络发送一个ARP协议广播包，这个广播包里面就有待查询的IP地址，而直接收到这份广播的包的所有主机都会查询自己的IP地址。如果收到广播包的某一个主机发现自己符合条件，那么就准备好一个包含自己的MAC地址的ARP包传送给发送ARP广播的主机。</p>
+<p>广播主机拿到ARP包后会更新自己的ARP缓存。发送广播的主机就会用新的ARP缓存数据准备好数据链路层的的数据包发送工作.</p>
+</blockquote>
+<p>RARP相反,是根据Mac地址向网关请求查询IP地址的一个协议;</p>
+<h4 id="ICMP协议"><a href="#ICMP协议" class="headerlink" title="#ICMP协议"></a>#ICMP协议</h4><p>ICMP是IP协议中的一个子协议.它不传输用户数据，只用来诊断报文传输是否到达，路由，主机是否可用等。</p>
+<p>使用ICMP最出名的两个工具就是： ping 和 Traceroute （[‘treisəru:t]）。</p>
+<p>ping程序来计算间隔时间，并计算有多少个包被送达。用户就可以判断网络大致的情况。</p>
+<p>Traceroute是用来侦测主机到目的主机之间所经路由情况的重要工具。原理如下：</p>
+<p>假设我们使用命令 <code>tracert www.baidu.com</code> 来进行测试：</p>
+<blockquote>
+<p>拿到目的主机的IP后，它首先给目的主机发送一个TTL=1（Time To Live）的UDP数据包，而经过的第一个路由器收到这个数据包以后，就自动把TTL减1，而TTL变为0以后，路由器就把这个包给抛弃了，并同时产生一个主机不可达的ICMP数据报给主机。主机收到这个数据报以后再发一个TTL=2的UDP数据报给目的主机，然后刺激第二个路由器给主机发ICMP数据报。如此往复直到到达目的主机。这样，traceroute就拿到了所有的路由器IP。</p>
+</blockquote>
+<h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h2><p>TCP/UDP都是传输层协议。它将来自应用层的Packet转化为Segment。</p>
+<h4 id="TCP协议"><a href="#TCP协议" class="headerlink" title="# TCP协议"></a># TCP协议</h4><p>TCP Header 如下图：<em><a href="#zhu4">[注4]</a></em></p>
+<p><img src="https://markdown-images.oss-cn-hangzhou.aliyuncs.com/TCP1111.png" style="zoom:50%"></p>
+<p><br></p>
+<ol>
+<li><p><strong><em>TCP</em>是面向连接的</strong> <em><a href="#zhu3">[注3]</a></em>，所以它是<strong>安全的连接</strong>。</p>
+<p>HTTP、FTP、SMTP(邮件服务)、TELENT(远程终端接入服务)、都是基于TCP协议的。</p>
+</li>
+</ol>
+<ol>
+<li><p><strong>TCP是面向字节流的</strong>。TCP有一个缓冲区，它将上层（应用层）的数据先写入缓冲区，然后由TCP协议按照字节流的方式控制发送。当数据太长，它还可以进行分片发送。</p>
+<p>作为对比，UDP是面向报文的，它没有缓冲区，应用层的数据经过UDP添加Header之后，就交给了网络层发送，由网络层进行分片，所以是面向报文的。</p>
+</li>
+<li><p><strong>TCP提供的是安全的传输服务</strong>。它可以保证数据的送达，无差错，不重复，有序。 </p>
+<p>作为对比，UDP提供的是最大量最快速的交付服务，不保证数据的送达；</p>
+</li>
+<li><p>TCP的服务是点对点，一对一。而UDP可以一对多，多对多。</p>
+</li>
+<li><p>上面的图中可以看到，TCP的Header占用了20个字节。作为对比，UDP的Header只占用8个字节；</p>
+</li>
+</ol>
+<h5 id="TCP建立连接的三次握手"><a href="#TCP建立连接的三次握手" class="headerlink" title="TCP建立连接的三次握手"></a>TCP建立连接的三次握手</h5><p>一定要先搞清楚 <em><a href="#zhu4">[注4]</a></em> 中标志位的意思，再看图说话：</p>
+<p><img src="https://markdown-images.oss-cn-hangzhou.aliyuncs.com/TCP2.png" style="zoom:50"></p>
+<ol>
+<li>客户端创建socket，发送 <code>SYN=1,seq=J</code> 给服务端；</li>
+<li>服务端收到,发送 <code>SYN=1,ACK=1,ack=J+1，seq=K</code> 给客户端；</li>
+<li>客户端收到，发送 <code>ACK=1,ack=K+1</code> 给服务端；</li>
+</ol>
+<p>注意两点：</p>
+<ol>
+<li>ACK=1代表确认的意思，所以三次握手中，ACK都为1；</li>
+<li>服务端应答客户端的seq为重置的随机数。</li>
+<li>ack始终等于接收到的seq+1；</li>
+</ol>
+<p><br></p>
+<p>Q: 为什么需要三次握手？两次不行吗？四次不行吗？</p>
+<p>A: 关于为什么一定需要三次握手，大家各有各的说法。下面是最靠谱的：</p>
+<blockquote>
+<p>根本原因，是为了满足”在不可靠信道上可靠地传输信息”这一需求所导致。</p>
+<p>具体原因    :</p>
+<ol>
+<li>为了防止已失效的连接请求报文段突然又传送到了服务端，因而产生错误.</li>
+</ol>
+<p>假如只有两次握手，Client发送建立连接请求，但是在网络的某个节点拥堵了，一段时间之后，Client端已经认为超时停止发送。这时候Service端又收到了请求，由于两次握手已经完成，Service端就进入了等待数据状态，而Client端是不会发送数据的，这就导致了Service端的资源浪费；</p>
+<ol>
+<li>三次握手是在保证信道安全可用的基础上，次数最少的。次数再多就浪费资源了，没有意义。</li>
+</ol>
+</blockquote>
+<p>三次握手还有一个段子：</p>
+<blockquote>
+<p>三次握手：</p>
+<ul>
+<li>“喂，你听得到吗？”</li>
+<li>“我听得到呀，你听得到我吗？”</li>
+<li>“我能听到你，今天balabala……”</li>
+</ul>
+<p>两次握手：</p>
+<ul>
+<li>“喂，你听得到吗？”</li>
+<li>“我听得到呀”</li>
+<li>“今天balabala……”</li>
+<li>“草，你谁啊！！！！”</li>
+</ul>
+<p>四次握手：</p>
+<ul>
+<li>“喂，你听得到吗？”</li>
+<li>“我听得到呀，你听得到我吗？”</li>
+<li>“我能听到你，你能听到我吗？”</li>
+<li>“……怎么这么傻逼”</li>
+</ul>
+</blockquote>
+<p><br></p>
+<h5 id="TCP断开连接的四次挥手"><a href="#TCP断开连接的四次挥手" class="headerlink" title="TCP断开连接的四次挥手"></a>TCP断开连接的四次挥手</h5><p>TCP是双向通信的，Client端和Service端都可以主动发送消息，所以断开连接的时候，需要客户端和服务端总共发送4个包以确认连接的断开，这样才能保证双方都不再接收和发送消息；</p>
+<blockquote>
+<p>四次挥手对话：</p>
+<ul>
+<li>“喂，这里是大雄, 我要关机了，收到了吗胖虎？”          【大雄请求关闭，不再发送】</li>
+<li>“这里是胖虎，已经收到，你关机吧”                                【胖虎收到，允许关闭，不再接收。】</li>
+<li>“这里是胖虎，大雄大雄, 我也要关机了，听到了吗？”  【胖虎请求关闭，不再发送】</li>
+<li>“这里是大雄，收到。可以关机。你关我也关。”             【大雄发送确认，不再接收】</li>
+</ul>
+</blockquote>
+<p>如下图：</p>
+<p><img src="https://markdown-images.oss-cn-hangzhou.aliyuncs.com/TCP22.png" style="zoom:50"></p>
+<p>注意点：</p>
+<p>第四次挥手中，Client端是在等待一段时间后关闭的。</p>
+<blockquote>
+<p>Client 收到 Server 发送的 FIN 报文段，向 Server 发送ACK报文段，然后Client端就进入了TIME_WAIT状态；</p>
+<p>Server收到Client的ACK报文段以后，就关闭连接；此时，Client等待2MSL <em>[注5]</em> 后依然没有收到回复，则证明Server端已正常关闭，那Client也可以关闭连接了。</p>
+</blockquote>
+<p><br></p>
+<p>Q: 为什么要四次挥手？</p>
+<p>A: TCP是双全公模式的，发送 FIN 报文只是代表发送方没有数据要发送了，但是还可以接收数据。所以这就要就双方都要发送一次 FIN 报文，而且还要回复对方的 FIN 报文，所以至少4次了。</p>
+<h5 id="TCP的流量控制"><a href="#TCP的流量控制" class="headerlink" title="TCP的流量控制"></a>TCP的流量控制</h5><p>如果发送方把数据发送得过快，接收方可能会来不及接收，这就会造成数据的丢失。所谓<strong>流量控制</strong>就是让发送方的发送速率不要太快，要让接收方来得及接收.</p>
+<blockquote>
+<p>利用<strong>滑动窗口机制</strong>可以很方便地在TCP连接上实现对发送方的流量控制。</p>
+<p>设A向B发送数据。在连接建立时，B告诉了A：“我的接收窗口是 rwnd = 400 ”(这里的 rwnd 表示 receiver window) 。因此，发送方的发送窗口不能超过接收方给出的接收窗口的数值。</p>
+</blockquote>
+<p>TCP通信中，每一个报文都会包含有序号和窗口，以此来进行流量控制。</p>
+<h5 id="TCP慢开始"><a href="#TCP慢开始" class="headerlink" title="TCP慢开始"></a>TCP慢开始</h5><blockquote>
+<p>当主机开始发送数据时，如果立即所大量数据字节注入到网络，那么就有可能引起网络拥塞，因为现在并不清楚网络的负荷情况。</p>
+<p>因此，较好的方法是，先探测一下，即由小到大逐渐增大发送窗口，也就是说，由小到大逐渐增大拥塞窗口cwnd ( congestion window ）数值。</p>
+<p>一开始，将拥堵窗口置为1，即只允许发送一个分组的报文，接收方收到后，将拥堵窗口置为2；</p>
+<p>发送方就可以发送两个分组的报文，接收方收到后，将拥堵窗口置为4；</p>
+<p>发送发发送4个分组的报文。。。以此类推。</p>
+</blockquote>
+<h5 id="避免拥塞-se"><a href="#避免拥塞-se" class="headerlink" title="避免拥塞(se)"></a>避免拥塞(se)</h5><p>为了防止拥塞窗口cwnd增长过大引起网络拥塞，还需要设置一个慢开始门限ssthresh状态变量.</p>
+<p>只要发送方判断网络出现拥塞（其根据就是没有收到确认），就要把慢开始门限ssthresh设置为出现拥塞时的发送 方窗口值的一半（但不能小于2）。然后把拥塞窗口cwnd重新设置为1，执行慢开始算法。</p>
+<h4 id="UDP协议"><a href="#UDP协议" class="headerlink" title="# UDP协议"></a># UDP协议</h4><p><strong>UDP是面向无连接的</strong> <em><a href="#zhu1">[注3]</a></em>， 所以<strong>不是安全的连接</strong>。</p>
+<p>DNS、TFTP、NFS、是基于UDP协议的。</p>
+<h2 id="注"><a href="#注" class="headerlink" title="注:"></a>注:</h2><h4 id="注1"><a href="#注1" class="headerlink" title="# 注1"></a># 注1<span id="zhu1"></span></h4><p>每个数字取值范围0~255为2^8次方,需要8位二进制,四个数字即32位. IPv6位128位;</p>
+<h4 id="注2"><a href="#注2" class="headerlink" title="# 注2"></a># 注2<span id="zhu2"></span></h4><p>IP Header：</p>
+<p><img src="https://markdown-images.oss-cn-hangzhou.aliyuncs.com/TCP11111.png" style="zoom:60%"></p>
+<h4 id="注3"><a href="#注3" class="headerlink" title="# 注3"></a># 注3<span id="zhu3"></span></h4><p>面向连接 vs 面向无连接：</p>
+<ol>
+<li>面向连接类似打电话，接通后方能传输信息；</li>
+<li>无连接类似寄信，填好邮编（IP）就能发出，不管接收方是否能成功接收。</li>
+</ol>
+<h4 id="注4"><a href="#注4" class="headerlink" title="# 注4"></a># 注4<span id="zhu4"></span></h4><p>TCP Header中一些标志位的解释：</p>
+<ol>
+<li>Sequence Number: 数据流序列号（TCP标示当前数据流的顺序，保证有序。)</li>
+<li>Acknowledgment Number: 确认号（注意和ACK是不太一样的，ACK代表确认的意思，在三次握手中服务端收到客户端建立连接的请求包后（第一次握手），会回复发送端一个包代表可以发送数据，回复的包中ACK = 1代表确认收到，ack number = seq + 1。</li>
+<li>SYN: 同步序列号。（在建立请求时，客户端会发送SYN号，请求建立连接。）</li>
+<li>其他：PSH(push传送)、 FIN(finish结束)、 RST(reset重置) 、URG(urgent紧急)。</li>
+</ol>
+<h4 id="注5"><a href="#注5" class="headerlink" title="# 注5"></a># 注5<span id="zhu5"></span></h4><p>MSL解释：报文段最大生存时间，它是任何报文段被丢弃前在网络内的最长时间。</p>
+<p>参考文章:  </p>
+<ul>
+<li>计算机网络面试 →  <a href="https://book.gitlore.com/android/Android%E6%A0%A1%E6%8B%9B%E9%9D%A2%E8%AF%95%E6%8C%87%E5%8D%97/computer-networks/tcpip.html" target="_blank" rel="external">Link</a>;</li>
+<li>TCP/IP系列 @MrPeak → <a href="http://mrpeak.cn/blog/tcp-ip/" target="_blank" rel="external">Link</a>;</li>
+</ul>
+</section>
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#网络" >
+    <span class="tag-code">网络</span>
+  </a>
+
+      </div>
+    
+    <div class="money-like">
+      <div class="reward-btn">
+        赏
+        <span class="money-code">
+          <span class="alipay-code">
+            <div class="code-image"></div>
+            <b>使用支付宝打赏</b>
+          </span>
+          <span class="wechat-code">
+            <div class="code-image"></div>
+            <b>使用微信打赏</b>
+          </span>
+        </span>
+      </div>
+      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+    </div>
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    
+      <div id="comments"></div>
+    
+  </article>
+</main>
+
+<script>
+  (function () {
+    var url = 'http://codermario.me/2018/01/21/HTTP杂记2/';
+    $('#article-banner').geopattern(url)
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      var imageW = $(this).width()
+      var imageH = $(this).height()
+      
+      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+      zoom = zoom < 1 ? 1 : zoom
+      zoom = zoom > 2 ? 2 : zoom
+      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+      $('.image-view-wrap').addClass('wrap-active')
+      $('.image-view-wrap img').css({
+        'width': `${imageW}`,
+        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+      })
+      $('html').css('overflow', 'hidden')
+
+      $('.image-view-wrap').on('click', function() {
+        $(this).remove()
+        $('html').attr('style', '')
+      })
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "weelh";
+    if (gitmentConfig != "undefined") {
+      var gitment = new Gitment({
+        id: "HTTP杂记2",
+        owner: "weelh",
+        repo: "weelh.github.io",
+        oauth: {
+          client_id: "d5e506a92cc002327d0c",
+          client_secret: "e2b05915e16252b0e7f5e643032b9c3f76efc2b9"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'a59fc3b35aa0663799f66f93f31ad9eb';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

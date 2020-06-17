@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="iOS Developer">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  <title>
+    
+      HTTP杂记 | Mario&#39;s Space
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+</head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Mario's Space</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>HTTP杂记</h2>
+  <p class="post-date">2018-01-20</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body">
+  <article class="post-article">
+    <section class="markdown-content"><h3 id="HTTP初探"><a href="#HTTP初探" class="headerlink" title="HTTP初探"></a>HTTP初探</h3><p><strong>Request</strong>由三部分组成: <code>RequestLine + CRLF + Header + CRLF + Body(可选)</code>.</p>
+<p>使用Wireshark抓包可以看到 CRLF 其实就是 <code>\r\n</code> 对应ASCII码的回车和换行. (如果使用Charles抓包, 我们只能看到解析并且格式化之后的数据,这并不利于探究HTTP的组成);</p>
+<p><br></p>
+<p><strong>Request-Line</strong></p>
+<ol>
+<li><code>Request-Line = Method SP Request-URI SP HTTP-Version CRLF</code> 即  <code>GET/POST + 空格 + URL + 空格 + HTTP/1.1 + \r\n</code></li>
+<li>Request-URL 包含了 absoluteURI 和 abs_path 两种,abs_path的话,Host就包含在了Header中;</li>
+</ol>
+<p><br></p>
+<p><strong>Header</strong></p>
+<ol>
+<li>Header本质是一些键值对. 每个键值对的形式为：<strong>Key : Value CRLF</strong>; </li>
+<li>最后一个键值对后面再跟一个 CRLF 表示 Header 结束;</li>
+</ol>
+<p><br></p>
+<p><strong>Body</strong></p>
+<ol>
+<li>GET请求Body一般是空, 业务参数附加在Request-URL中;</li>
+<li>POST请求Body一般不为空,存放业务参数. 但是Request-Url中依然可以像GET一样存放部分业务参数;</li>
+<li>从抓包数据看,Body更像是一块单独存放的数据,当定义好Body之后,Header 中会添加一对键值: <code>Content-Length: 232 CRLF</code>, 服务端应用层拿到传输层的数据后, 就是根据Length去读取Body数据的.</li>
+</ol>
+<p><br></p>
+<p><strong>HTTP Response</strong></p>
+<ol>
+<li><p>Response结构和Request大致相同, 只不过把Request-Line 换成了 Status-Line;</p>
+<p><code>Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF</code>; 常用的Status Code要熟悉:</p>
+<blockquote>
+<p>1xx: Informational - Request received, continuing process。 </p>
+<p>2xx: Success - The action was successfully received, understood, and accepted。</p>
+<p>3xx: Redirection - Further action must be taken in order to complete the request。 </p>
+<p>4xx: Client Error - The request contains bad syntax or cannot be fulfilled。 </p>
+<p>5xx: Server Error - The server failed to fulfill an apparently valid request。</p>
+</blockquote>
+</li>
+</ol>
+<p><br></p>
+<p><strong>可以用来携带数据的部分</strong></p>
+<p>Request-Url / Header / Body</p>
+<p><br></p>
+<p><strong>Request-Line 解析</strong></p>
+<p>从字节流中读到CRLF停止,这就是Request-Line; </p>
+<p>然后做ASCII码还原 / 根据空格解析出Request-Url;</p>
+<p>这里牵扯到为什么Request-Url在传输的时候要做Url-Encode,是为了避免不安全的字符,做到安全解析;</p>
+<p><br></p>
+<p><strong>Header解析</strong></p>
+<p>从字节流中读取到一个CRLF代表一个键值对, 直到连续两个CRLF出现,代表Header结束;</p>
+<p><br></p>
+<p><strong>Body解析</strong></p>
+<p>根据Header中的Content-Length读取对应长度字节流,就是Body;</p>
+<p><br></p>
+<p><strong>Content-Type</strong></p>
+<p>向Service端发送数据时候,要喝服务端约定使用哪种数据格式,常用如下:</p>
+<ul>
+<li>application/json</li>
+<li>application/x-www-form-urlencoded</li>
+<li>multipart/form-data</li>
+</ul>
+<p>application/json是我们常用的数据交换格式, 告诉服务端Body中序列化之后的Json字符串;</p>
+<p>如果不设置Content-Type, 那系统就会默认为 application/x-www-form-urlencoded, 它代表Body是url-encode之后的数据;</p>
+<p>multipart/form-data 通常是文件上传的时候使用,它会将Body分割成很多个块上传;</p>
+<p><br></p>
+<h3 id="HTTP协议"><a href="#HTTP协议" class="headerlink" title="HTTP协议"></a>HTTP协议</h3><p><strong>HTTP是进行互联网数据传输的基本协议, 它和UDP一样,都是基于最基本的TCP/IP协议开发的.</strong></p>
+<p><strong>HTTP简化了数据传输的方式,但是要彻底了解HTTP, 必须要先了解TCP/IP协议是如何工作的</strong></p>
+<p>TCP/IP协议在另一篇文章 《TCP/IP详解笔记》 中记录.</p>
+<p><br></p>
+<h3 id="Get-Post"><a href="#Get-Post" class="headerlink" title="Get / Post"></a>Get / Post</h3><p>无论GET和POST, 本质都是基于TCP协议的数据传输，他们两个的区别在不同领域其实总结起来是不一样的。针对前端领域，主要是基于浏览器来说的，比如GET是URL可见的，可以被浏览器缓存，后退无害；POST不能被缓存，后退会导致重复提交等。对iOS来说，没那么复杂，主要在一下几个方面：</p>
+<ol>
+<li>语义上来说，GET用于获取数据（对服务器无修改）， POST用于提交数据（修改服务器数据）；</li>
+<li>业务参数存放的位置不同。GET只能将业务参数存放在Request-Line中的Request Url中,没有Body。POST不仅可以存放在Request Url中，还可以存放在Body中；</li>
+<li>基于第2点，可见GET的参数有限制，因为受限于Url的长度（URL 的最大长度是 2048 个字符）。POST因为存放在Body中，所以无限制。</li>
+<li>服务端对请求的读取也不同，GET直接从Url中获取业务参数；POST先从Header中的Content-Length得到Body长度，然后读取Content-Length字节的Body。</li>
+<li>安全性上来说，POST要优于GET。（当然最安全的做法还是HTTPS加密）。</li>
+</ol>
+<p><br></p>
+<h2 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h2><p>HTTPS具有安全的校验机制和身份验证过程，更加安全。</p>
+<p>HTTPS和HTTP的主要区别：</p>
+<blockquote>
+<p>HTTPS协议需要用到CA证书，一般免费的不多，需要交费。</p>
+<p>HTTP是明文传输，HTTPS则是具有安全性的加密传输，可以进行身份认证。</p>
+<p>两者使用的端口也不一样，HTTP是80，HTTPS是443。</p>
+</blockquote>
+<p><br></p>
+<p>HTTPS = HTTP + SSL;</p>
+<p>它在应用层 HTTP协议 和 传输层 TCP协议之间加了一层 SSL（Secure Socket Layer 安全套接字层）或者TLS（Transport Layer Security，传输层安全）;为网络通信提供安全。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+------+---------+</div><div class="line">| HTTP |  HTTPS  |</div><div class="line">+------+---------+</div><div class="line">| HTTP |   HTTP  |</div><div class="line">|  -   | SSL/TLS |  =&gt; HTTPS即在HTTP下层增加了SSL或者TLS用来加密和解密；</div><div class="line">| TCP  |   TCP   |</div><div class="line">|  IP  |    IP   |</div><div class="line">+------+---------+</div></pre></td></tr></table></figure>
+<p>探究SSL连接方法之前，先看下SSL如果只使用对称加密或者非对称加密为什么不安全？</p>
+<p><br></p>
+<p><strong>对称加密</strong> 在握手连接过程中的不安全行。</p>
+<blockquote>
+<p>假设k为秘钥，加密算法为 f(k, data) = x </p>
+<p>客户端和服务端的数据发送都经过加密算法加密，在黑客不知道对称加密的秘钥K的时候，确实是无法解密报文的，但关键是秘钥的下发过程。</p>
+<p>服务端只保存一份秘钥k，建立连接时，下发给客户端。如果黑客先充当客户端得到秘钥k，那接下来所有客户端的信息都能被破解。</p>
+<p>Q: 那为每个客户端都发送一个唯一的k呢？ </p>
+<p>如果有一亿个客户端，服务端要存储一亿个k，显然是不可取的。</p>
+</blockquote>
+<p><br></p>
+<p><strong>非对称加密</strong> 在握手连接过程中的不安全性。</p>
+<blockquote>
+<p>假设非对称加密的一对秘钥为（pk, sk）公钥pk，sk私钥。私用公钥加密的可以使用私钥解密。反之亦然。</p>
+<p>当客户端向服务端发送握手消息时：</p>
+<ol>
+<li>向服务端索要公钥pk。使用公钥对信息加密，发送给服务端。</li>
+<li>服务端使用私钥sk解密验证，可以解开，则安全。否则说明公钥被中间人替换或者信息被篡改，拒绝。</li>
+</ol>
+<p>Client -&gt; Service 是安全的。</p>
+<p>但是当Service向Client发送消息时怎么办？</p>
+<ol>
+<li>使用公钥加密？ 客户端没有私钥无法解密。</li>
+<li>使用私钥加密？黑客就可以先充当客户端获取公钥，再使用公钥解密。 </li>
+</ol>
+<p>Service -&gt; Client 是不安全的。</p>
+</blockquote>
+<p><br></p>
+<p>接下来看SSL的安全连接过程：（TLS大致相似）</p>
+<blockquote>
+<ol>
+<li><p>客户端发送 <code>clientHello + 随机数1 + 可选的非对称加密算法</code> ；</p>
+</li>
+<li><p>服务端返回 <code>serverHello + 随机数2 + 确定的非对称加密算法 + 算法的公钥pk+ 服务端身份证书</code> ；</p>
+</li>
+<li><p>客户端校验服务端身份，组装<code>预主秘钥</code> 和 <code>会话密钥</code> 发送给服务端。</p>
+<p>3.1 校验过程：</p>
+<ul>
+<li>校验证书是否过期，是否是操作系统信任的CA机构；</li>
+<li>使用CA机构的公钥，能否正确解开证书的数字签名。</li>
+</ul>
+<p>3.2 组装预主密钥：</p>
+<ul>
+<li>随机生成一个48字节长度的数，使用步骤2中确定的非对称加密算法（<code>RSA、DH</code>）进行加密（使用服务端返回的pk公钥进行加密），成为一个 <code>预主秘钥</code>，发送给服务端；</li>
+</ul>
+<p>3.3 组装会话秘钥：</p>
+<ul>
+<li>将 <code>随机数1 + 随机数2 + 预主密钥</code> 使用 <code>服务端证书中的公钥</code> 加密，成为一个 <code>会话秘钥</code>。</li>
+</ul>
+</li>
+<li><p>服务端（可选校验客户端的证书是否可靠）收到 <code>预主密钥</code> ，使用自己的 <code>私钥</code> 进行解密。和客户端3.3的步骤一样生成一个 <code>会话秘钥</code>。</p>
+</li>
+<li><p>客户端使用 <code>会话秘钥</code> 加密的数据向服务端发送确认消息。</p>
+</li>
+<li><p>服务端同样回复一个确认消息。握手完成。可以开始发送报文。</p>
+</li>
+</ol>
+</blockquote>
+<p><br></p>
+<p>SSL会话终止过程：</p>
+<blockquote>
+<p>客户端/服务端 发送一个终止类型的SSL记录来中止连接。（就是一个类型为终止的SSL片段）。</p>
+<p>Q：SSL也是基于TCP的，为什么不直接发送一个TCP FIN报文来终止连接？</p>
+<p>为了防止黑客过早的发送TCP FIN报文终止正常连接，干扰数据。</p>
+</blockquote>
+<p><br></p>
+<p>SSL这个过程中，为何要使用CA证书？</p>
+<blockquote>
+<p>为了避免中间人攻击！（类似Charles抓包，Charles有自己的证书，但是未经信任。）</p>
+<p>如果不使用CA证书，黑客就可以充当一个中间人的角色。中间人是有自己的公钥和私钥的（pk1, sk1）。</p>
+<p>拦截步骤1，返回中间人自己的公钥pk1，同时中间人使用客户端的原始信息向服务端发送消息。</p>
+<p>拦截步骤2，中间人收到服务端返回的pk，自己留着。</p>
+<p>接下来客户端每发送一个消息，中间人都能够使用自己的私钥解密。</p>
+<p>服务端返回的消息，中间人使用截获的pk解密，再使用自己的sk1加密，返回给客户端。</p>
+<p>如此往复，所有的消息在中间人面签都是透明的。</p>
+<p>有了CA证书机制，客户端就可以验证收到的消息是否是经过本机存储的权威CA签名的。从而杜绝中间人。</p>
+</blockquote>
+<p><br></p>
+<p>Q: HTTPS使用什么加密方法？</p>
+<blockquote>
+<p>握手过程使用非对称加密，报文发送过程使用对称加密（会话秘钥）。</p>
+</blockquote>
+<p><br></p>
+<p>Q1: 组装 <code>预主秘钥</code> 为什么要使用非对称加密？</p>
+<blockquote>
+<p>对称加密的弊端在于：双方使用同一个秘钥加密解密，则秘钥必要需要告诉对方才能解密，那在秘钥的传输过程中可以被截获，这样就没有安全性可言了。</p>
+</blockquote>
+<p><br></p>
+<p>Q2: 为什么不直接使用 <code>预主密钥</code> ，还要再生成一个 <code>会话密钥</code> ？</p>
+<blockquote>
+<p>因为非对称加密是十分损耗性能的，如果会话过程中一直使用非对称加密，会影响效率。</p>
+<p>所以先使用非对称加密的 <code>预主密钥</code> 安全的将会话秘钥告知给客户端或者服务端，后续再使用 <code>会话密钥</code> 加密解密。（即对称秘钥原理）。</p>
+</blockquote>
+<p><br></p>
+<p>Q4: 随机数的作用？</p>
+<blockquote>
+<p>防止会话重放。如果黑客记录下真个握手过程，从而再次将会话发送给服务端，如果不使用随机数，服务端是无法察觉到的，而使用了随机数，由于每次的随机数都不同，使用一次就报废了，就无法通过服务端的校验。</p>
+</blockquote>
+<p><br></p>
+<p>Q3: iOS中的HTTPS证书验证是怎么实现的？</p>
+<blockquote>
+<p>需要在 <code>NSURLSession</code> 中实现下面的方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt; - (void)URLSession: didReceiveChallenge: completionHandler:;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</blockquote>
+<p>其中参数challenge的类型为： <code>NSURLAuthenticationChallenge</code> ，当我们发送一个请求接收到回调之后，会返回这个challenge，包含了证书。可以选择对证书验证的内容。</p>
+<p><br></p>
+<p>Q4: HTTP状态码？</p>
+<blockquote>
+<ul>
+<li>1XX 临时/信息响应；</li>
+<li>2XX 成功；</li>
+<li>3XX 重定向；（网页已移动到新的位置）</li>
+<li>4XX 客户端/请求错误；</li>
+<li>5XX 服务器错误；</li>
+</ul>
+</blockquote>
+<p>视频： <a href="https://www.bilibili.com/video/BV1w4411m7GL/?spm_id_from=333.788.videocard.0" target="_blank" rel="external">https://www.bilibili.com/video/BV1w4411m7GL/?spm_id_from=333.788.videocard.0</a></p>
+<p><br></p>
+<h3 id="自己遇到的面试问题"><a href="#自己遇到的面试问题" class="headerlink" title="自己遇到的面试问题"></a>自己遇到的面试问题</h3><p><strong>响应码 304， HTTP的缓存策略，HTTP头中的一些字段</strong></p>
+<p>304是协商缓存的状态码。在请求头中带上 <code>If-Modified-Since</code> 资源最后修改的时间，如果没有修改则返回304，否则返回200和最新资源。</p>
+<blockquote>
+<p>当浏览器第一次访问一个资源的时候，服务器会在response header中返回一个Last-Modified，代表这个资源最后的修改时间，当浏览器再次访问这个资源的时候，会在request header中带上 If-Modified-Since，值为上次请求时服务器返回的 Last-Modified 的值，然后服务器根据资源上次修改的时间确认资源在这段期间内是否更改过，如果没有，则返回304，如果有，则返回200并返回最新的资源。</p>
+</blockquote>
+<p><br></p>
+<p><strong>HTTP请求头中常用字段：</strong></p>
+<p>Accept： 可接受的响应类型。（Accept: text/plain）</p>
+<p>Content-Type：请求体的MIME类型。（POST和PUT中）</p>
+<p>Content-Length： 请求头长度（8进制表示）</p>
+<p>Cache-Control：指定当前的请求/回复中是否使用缓存机制（Cache-Control: no-cache）</p>
+<p>If-Modified-Since：资源上次修改时间。在资源未被修改的情况下返回304未修改（If-Modified-Since: Dec, 26 Dec 2015 17:30:00 GMT）</p>
+<p>User-Agent： 浏览器的身份标识字符串（User-Agent: Mozilla/……）</p>
+<p><br></p>
+<p><strong>HTTP响应头中常用字段：</strong></p>
+<p>Status： 状态码。（Status: 200 OK）</p>
+<p>Last-Modified：请求的资源的最后修改日期（Last-Modified: Dec, 26 Dec 2015 17:30:00 GMT）</p>
+<p><br></p>
+<p><strong>HTTP缓存策略</strong>：</p>
+<p>分为<strong>强制缓存</strong>和<strong>协商缓存</strong>，通过HTTP Header中的字段控制。</p>
+<p>强制缓存：所请求的数据在缓存数据库中尚未过期时，不与服务器进行交互，直接使用缓存数据库中的数据。</p>
+<blockquote>
+<p>通过指定Cache-Control来实现缓存机制。其常用的几个取值有：<br>private：客户端可以缓存<br>public：客户端和代理服务器都可以缓存<br>max-age=xxx：缓存的内容将在xxx 秒后失效<br>no-cache：需要使用协商缓存来验证缓存数据<br>no-store：所有内容都不会缓存，强缓存和协商缓存都不会触发</p>
+<p>must-revalidate：在使用缓存之前必须验证旧资源的状态，并且不可使用过期资源。</p>
+</blockquote>
+<p>协商缓存：当强缓存过期未命中或者响应报文<code>Cache-Control</code>中有<code>must-revalidate</code>标识必须每次请求验证资源的状态时，便使用协商缓存的方式去处理缓存文件。</p>
+<p>协商缓存主要原理是从缓存数据库中取出缓存的标识，然后向浏览器发送请求验证请求的数据是否已经更新，如果已更新则返回新的数据，若未更新则使用缓存数据库中的缓存数据</p>
+<h3 id="通常一个URL中包含了哪些字段"><a href="#通常一个URL中包含了哪些字段" class="headerlink" title="通常一个URL中包含了哪些字段"></a>通常一个URL中包含了哪些字段</h3><p><a href="https://www.testurl.com:8080/path/subpath?uid=123&amp;gid=456" target="_blank" rel="external">https://www.testurl.com:8080/path/subpath?uid=123&amp;gid=456</a></p>
+<p>Url Scheme: https</p>
+<p>Url Host: www.testurl.com</p>
+<p>Url Port: 8080</p>
+<p>Url Path: /path/subpath</p>
+<p>Url LastPathComponent： subpath</p>
+<p>Url Query:uid=123&amp;gid=456</p>
+</section>
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#网络" >
+    <span class="tag-code">网络</span>
+  </a>
+
+      </div>
+    
+    <div class="money-like">
+      <div class="reward-btn">
+        赏
+        <span class="money-code">
+          <span class="alipay-code">
+            <div class="code-image"></div>
+            <b>使用支付宝打赏</b>
+          </span>
+          <span class="wechat-code">
+            <div class="code-image"></div>
+            <b>使用微信打赏</b>
+          </span>
+        </span>
+      </div>
+      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+    </div>
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    
+      <div id="comments"></div>
+    
+  </article>
+</main>
+
+<script>
+  (function () {
+    var url = 'http://codermario.me/2018/01/20/HTTP杂记/';
+    $('#article-banner').geopattern(url)
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      var imageW = $(this).width()
+      var imageH = $(this).height()
+      
+      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+      zoom = zoom < 1 ? 1 : zoom
+      zoom = zoom > 2 ? 2 : zoom
+      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+      $('.image-view-wrap').addClass('wrap-active')
+      $('.image-view-wrap img').css({
+        'width': `${imageW}`,
+        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+      })
+      $('html').css('overflow', 'hidden')
+
+      $('.image-view-wrap').on('click', function() {
+        $(this).remove()
+        $('html').attr('style', '')
+      })
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "weelh";
+    if (gitmentConfig != "undefined") {
+      var gitment = new Gitment({
+        id: "HTTP杂记",
+        owner: "weelh",
+        repo: "weelh.github.io",
+        oauth: {
+          client_id: "d5e506a92cc002327d0c",
+          client_secret: "e2b05915e16252b0e7f5e643032b9c3f76efc2b9"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'a59fc3b35aa0663799f66f93f31ad9eb';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

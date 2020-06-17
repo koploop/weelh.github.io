@@ -108,6 +108,134 @@
   
     <article class="article-card">
       <h2 class="article-head">
+        <a href="/2016/07/05/使用tree命令生成树状目录/">使用tree命令生成树状目录</a>
+      </h2>
+      <p class="article-date">July 5, 2016</p>
+      
+        
+  <a href="/tags#Terminal" >
+    <span class="tag-code">Terminal</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          <p>使用命令行快速生成项目目录结构. 可以定义目录深度.<br>
+        
+      </div>
+      <a class="more" href="/2016/07/05/使用tree命令生成树状目录/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2016/06/20/vim的几个常用操作/">vim的几个常用操作</a>
+      </h2>
+      <p class="article-date">June 20, 2016</p>
+      
+        
+  <a href="/tags#vim" >
+    <span class="tag-code">vim</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          光标
+
+
+h, j, k, l
+h表示往左，j表示往下，k表示往右，l表示往上
+
+
+
+
+Ctrl+f
+上一页
+
+
+Ctrl+b
+下一页
+
+
+
+编辑
+
+
+i
+插入到光标的后面
+
+
+
+
+a
+插入到光标的后面
+
+
+Esc
+关闭插入模式
+
+
+u
+撤销上一步操作
+
+
+ctrl+r
+恢复上一步操作
+
+
+ ...
+        
+      </div>
+      <a class="more" href="/2016/06/20/vim的几个常用操作/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2016/06/17/Mac下多Ruby环境的坑/">Mac下多Ruby环境的坑</a>
+      </h2>
+      <p class="article-date">June 17, 2016</p>
+      
+        
+  <a href="/tags#Ruby" >
+    <span class="tag-code">Ruby</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          使用gem安装工具包时候，报错：
+123gem install xcprettyFetching: rouge-2.0.7.gem (100%)You don&apos;t have write permissions for the /Library/Ruby/Gems/2.0.0 dir ...
+        
+      </div>
+      <a class="more" href="/2016/06/17/Mac下多Ruby环境的坑/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2016/05/01/使用Xcode7生成动态库/">使用Xcode7生成动态库</a>
+      </h2>
+      <p class="article-date">May 1, 2016</p>
+      
+        
+  <a href="/tags#OC" >
+    <span class="tag-code">OC</span>
+  </a>
+
+  <a href="/tags#framework" >
+    <span class="tag-code">framework</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          <p>相比较于静态库,动态库有着自己的优势,除去上文中说道的资源包含和内存加载问题,在使用的时候相比较于.a的静态库也更方便,因为它本省包含了我们所需要的所有资源(自包含);所以我建议,我们更应该生成动态framework而非.a静态库;<br>
+        
+      </div>
+      <a class="more" href="/2016/05/01/使用Xcode7生成动态库/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
         <a href="/2016/05/01/利用Dispatch Group解决多个网络请求异步执行/">利用Dispatch Group解决多个网络请求异步执行</a>
       </h2>
       <p class="article-date">May 1, 2016</p>
@@ -239,26 +367,6 @@
       <a class="more" href="/2015/05/10/为什么NSString要用copy修饰/">Read more</a>
     </article>
   
-    <article class="article-card">
-      <h2 class="article-head">
-        <a href="/2015/03/04/Present可调整大小的视图/">Present一个可以调整大小的视图</a>
-      </h2>
-      <p class="article-date">March 4, 2015</p>
-      
-        
-  <a href="/tags#OC" >
-    <span class="tag-code">OC</span>
-  </a>
-
-      
-      <div class="article-summary">
-        
-          <h1 id="Present一个可以调整大小的视图"><a href="#Present一个可以调整大小的视图" class="headerlink" title="Present一个可以调整大小的视图"></a>Present一个可以调整大小的视图</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">XSetupViewController *setupVC = [[XSetupViewController alloc] init];</div><div class="line">UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:setupVC];</div><div class="line">nav.modalPresentationStyle = UIModalPresentationFormSheet;</div><div class="line">nav.view.backgroundColor = [UIColor clearColor];</div><div class="line">nav.navigationBarHidden = YES;</div><div class="line">[self presentViewController:nav animated:YES completion:nil];</div><div class="line">setupVC.preferredContentSize = CGSizeMake(522, 502);</div></pre></td></tr></table></figure>
-        
-      </div>
-      <a class="more" href="/2015/03/04/Present可调整大小的视图/">Read more</a>
-    </article>
-  
 
   
     <div class="guide-pager">
@@ -266,7 +374,7 @@
     <a href="/page/2/"><span class="page-arrow">← </span>Prev</a>
   
   
-    <a class="unvisible" href="/">Next <span class="page-arrow">→</span></a>
+    <a href="/page/4/">Next<span class="page-arrow"> →</span></a>
   
 </div>
   

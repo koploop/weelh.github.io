@@ -108,6 +108,100 @@
   
     <article class="article-card">
       <h2 class="article-head">
+        <a href="/2017/06/10/runtime替换类方法和实例方法的区别/">runtime替换类方法和实例方法的区别</a>
+      </h2>
+      <p class="article-date">June 10, 2017</p>
+      
+        
+  <a href="/tags#OC" >
+    <span class="tag-code">OC</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          runtime替换类方法和实例方法的区别
+替换实例方法
+
+12345678910111213141516171819//获取原始方法和要替换的方法(public方法)SEL originalPaySel = @selector(...);SEL swizzledPaySel = @selec ...
+        
+      </div>
+      <a class="more" href="/2017/06/10/runtime替换类方法和实例方法的区别/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/05/08/如何写一个参数不定的函数/">如何写一个参数不定的函数</a>
+      </h2>
+      <p class="article-date">May 8, 2017</p>
+      
+        
+  <a href="/tags#OC" >
+    <span class="tag-code">OC</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          如何写一个参数不定的函数先来看一下Foundation中创建一个数组的写法
+1NSArray *arr = [NSArray arrayWithObjects:id , nil];
+这其中最后一个nil是告诉函数参数已经没了.我们自己在自定义的时候有时候也会遇到这样的需求,那么怎么定义一个这 ...
+        
+      </div>
+      <a class="more" href="/2017/05/08/如何写一个参数不定的函数/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/04/17/增删改查Linux命令/">增删改查Linux命令</a>
+      </h2>
+      <p class="article-date">April 17, 2017</p>
+      
+        
+  <a href="/tags#Terminal" >
+    <span class="tag-code">Terminal</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          mkdir可选参数
+
+-p (— parents)  若路径中目录不存在,则创建该目录.
+
+可以递归建立那些尚不存在的目录,即一次建立多个
+Ex: mkdir -p submodule/test  一次创建submodule和test两个文件夹
+rm删除一个目录中的一个或多个文件或目录，如果 ...
+        
+      </div>
+      <a class="more" href="/2017/04/17/增删改查Linux命令/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/02/01/队列/">GCD in Swift3</a>
+      </h2>
+      <p class="article-date">February 1, 2017</p>
+      
+        
+  <a href="/tags#Swift" >
+    <span class="tag-code">Swift</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          今天,我们重新使用 Swift 来复习一遍 GCD 的基本用法. 当然,它适合像我这样由Objective-C转入Swift的入门者,也同样适用iOS入门者,毕竟,很多人现在依然搞不清队列,线程和任务的区别呢. 
+创建串行与并行队列使用GCD创建一个队列: 
+Objective-C
+1234 ...
+        
+      </div>
+      <a class="more" href="/2017/02/01/队列/">Read more</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
         <a href="/2016/12/25/Swift中的weak 和 unowned/">Swift中的weak和unowned</a>
       </h2>
       <p class="article-date">December 25, 2016</p>
@@ -240,134 +334,6 @@ ExampleClass.h
         
       </div>
       <a class="more" href="/2016/10/11/cocoaPods发布SDK流程/">Read more</a>
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head">
-        <a href="/2016/07/05/使用tree命令生成树状目录/">使用tree命令生成树状目录</a>
-      </h2>
-      <p class="article-date">July 5, 2016</p>
-      
-        
-  <a href="/tags#Terminal" >
-    <span class="tag-code">Terminal</span>
-  </a>
-
-      
-      <div class="article-summary">
-        
-          <p>使用命令行快速生成项目目录结构. 可以定义目录深度.<br>
-        
-      </div>
-      <a class="more" href="/2016/07/05/使用tree命令生成树状目录/">Read more</a>
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head">
-        <a href="/2016/06/20/vim的几个常用操作/">vim的几个常用操作</a>
-      </h2>
-      <p class="article-date">June 20, 2016</p>
-      
-        
-  <a href="/tags#vim" >
-    <span class="tag-code">vim</span>
-  </a>
-
-      
-      <div class="article-summary">
-        
-          光标
-
-
-h, j, k, l
-h表示往左，j表示往下，k表示往右，l表示往上
-
-
-
-
-Ctrl+f
-上一页
-
-
-Ctrl+b
-下一页
-
-
-
-编辑
-
-
-i
-插入到光标的后面
-
-
-
-
-a
-插入到光标的后面
-
-
-Esc
-关闭插入模式
-
-
-u
-撤销上一步操作
-
-
-ctrl+r
-恢复上一步操作
-
-
- ...
-        
-      </div>
-      <a class="more" href="/2016/06/20/vim的几个常用操作/">Read more</a>
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head">
-        <a href="/2016/06/17/Mac下多Ruby环境的坑/">Mac下多Ruby环境的坑</a>
-      </h2>
-      <p class="article-date">June 17, 2016</p>
-      
-        
-  <a href="/tags#Ruby" >
-    <span class="tag-code">Ruby</span>
-  </a>
-
-      
-      <div class="article-summary">
-        
-          使用gem安装工具包时候，报错：
-123gem install xcprettyFetching: rouge-2.0.7.gem (100%)You don&apos;t have write permissions for the /Library/Ruby/Gems/2.0.0 dir ...
-        
-      </div>
-      <a class="more" href="/2016/06/17/Mac下多Ruby环境的坑/">Read more</a>
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head">
-        <a href="/2016/05/01/使用Xcode7生成动态库/">使用Xcode7生成动态库</a>
-      </h2>
-      <p class="article-date">May 1, 2016</p>
-      
-        
-  <a href="/tags#OC" >
-    <span class="tag-code">OC</span>
-  </a>
-
-  <a href="/tags#framework" >
-    <span class="tag-code">framework</span>
-  </a>
-
-      
-      <div class="article-summary">
-        
-          <p>相比较于静态库,动态库有着自己的优势,除去上文中说道的资源包含和内存加载问题,在使用的时候相比较于.a的静态库也更方便,因为它本省包含了我们所需要的所有资源(自包含);所以我建议,我们更应该生成动态framework而非.a静态库;<br>
-        
-      </div>
-      <a class="more" href="/2016/05/01/使用Xcode7生成动态库/">Read more</a>
     </article>
   
 
