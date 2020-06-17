@@ -7,7 +7,7 @@
   <meta name="keyword" content="hexo-theme, vuejs">
   <title>
     
-      Xcode调试技巧之lldb中导入UIKit | Mario&#39;s Space
+      Mario&#39;s Space
     
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -105,28 +105,39 @@
 </header>
 
     <div id="article-banner">
-  <h2>Xcode调试技巧之lldb中导入UIKit</h2>
-  <p class="post-date">2016-11-11</p>
+  <h2></h2>
+  <p class="post-date">2020-05-20</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
   </div>
 </div>
 <main class="app-body">
   <article class="post-article">
-    <section class="markdown-content"><h1 id="Xcode调试技巧之lldb中导入UIKit"><a href="#Xcode调试技巧之lldb中导入UIKit" class="headerlink" title="Xcode调试技巧之lldb中导入UIKit"></a>Xcode调试技巧之lldb中导入UIKit</h1><p>有时候想在断点的时候打印一下UIView的bounds,但是会出现这样的提示:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">(lldb) p [self bounds]</div><div class="line">error: &apos;bounds&apos; has unknown return type; cast the call to its declared return type</div><div class="line">error: 1 errors parsing expression</div></pre></td></tr></table></figure>
-<p>这时候有计重解决办法:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">//1.导入UIkit或者Foundation框架</div><div class="line">(lldb) p @import UIKit</div><div class="line">(lldb) po [UIScreen mainScreen].bounds</div><div class="line">(origin = (x = 0, y = 0), size = (width = 1024, height = 768))</div><div class="line">(origin = (x = 0, y = 0), size = (width = 1024, height = 768))</div><div class="line"></div><div class="line">//2.使用layer打印</div><div class="line">p view.layer.bounds</div><div class="line">或者</div><div class="line">p (CGRect)[view bounds]这样</div></pre></td></tr></table></figure>
+    <section class="markdown-content"><p><strong>签名目的</strong>，确保代码是经过项目持有人修改和审查的，是被苹果签名信任的，安全的App。</p>
+<p>涉及到 <strong>非对称加密</strong>， <strong>数字签名</strong>。</p>
+<p>数字签名和加密一样，不同之处是一个是数据加密，一个是只签名。</p>
+<p><strong>申请证书</strong></p>
+<ol>
+<li><p>在你的 Mac 生成一对公私钥，这里称为公钥 <code>L</code>，私钥 <code>L’</code> ；</p>
+<p> 对应的是 keychain 里的 “从证书颁发机构请求证书”，这里就本地生成了一堆公私钥，保存的 <code>CertificateSigningRequest</code> 就是公钥，私钥保存在本地Mac中。</p>
+</li>
+<li><p>苹果自己有固定的一对公私钥，私钥在苹果后台，公钥在每个 iOS 设备上。这里称为公钥 <code>A</code>，私钥 <code>A‘</code>；</p>
+</li>
+</ol>
+<p>申请证书的过程，就是用苹果的私钥签名我们的公钥，生成证书。</p>
+<p>（证书的作用是，能够被苹果验证是正规的，认可的App）</p>
+<p><strong>生成 Provisioning Profile 文件</strong></p>
+<p>苹果后台配置appID, 设备列表，权限，外加申请的证书，这些数据组成一起，经过苹果的私钥 <code>A&#39;</code> 加密，组成 Provisioning Profile 文件。</p>
+<p>（Provisioning Profile 经过苹果私钥加密，苹果设备可通过公钥验证）</p>
+<p><strong>开发打包并签名</strong></p>
+<p>在开发编译 APP 时，用本地的私钥对APP签名，同时把 Provisioning Profile 打包进 APP 里，文件名为 <code>embedded.mobileprovision</code>，把 APP 安装到手机上。</p>
+<p><strong>验证</strong></p>
+<p><strong>验证证书和签名</strong>：在安装时，iOS 系统取得证书，通过系统内置的公钥 A，去验证 <code>embedded.mobileprovision</code> 中的签名是否正确，证书是否苹果的。</p>
+<p><strong>验证授权设备和权限等</strong>： 取出 Provisioning Profile 中的内容， 查看设备是否经过授权。appid对不对等。</p>
+<p><strong>p12</strong></p>
+<p>p12 其实是个包含了私钥的文件。这个私钥就是申请证书的那台Mac的私钥。</p>
+<p>我们下载的证书，包含了Mac的公钥，和苹果私钥的签名信息。在Xcode中选择这个证书的时候，会拿Mac的私钥验证这个证书，如果是自己的Mac，当然可以用私钥验证公钥，但是如果别的开发者也要用，他们Mac的私钥肯定无法解密我的Mac的公钥，就需要生成p12文件，把我们Mac的私钥共享给其他人。</p>
 </section>
-    
-      <div class="tags">
-        <span>Tags:</span>
-        
-  <a href="/tags#OC" >
-    <span class="tag-code">OC</span>
-  </a>
-
-      </div>
     
     <div class="money-like">
       <div class="reward-btn">
@@ -156,7 +167,7 @@
 
 <script>
   (function () {
-    var url = 'http://codermario.me/2016/11/11/Xcode调试技巧之lldb中导入UIKit/';
+    var url = 'http://codermario.me/2020/05/20/App签名原理/';
     $('#article-banner').geopattern(url)
     $('.header').removeClass('fixed-header')
 
@@ -200,7 +211,7 @@
     var gitmentConfig = "weelh";
     if (gitmentConfig != "undefined") {
       var gitment = new Gitment({
-        id: "Xcode调试技巧之lldb中导入UIKit",
+        id: "",
         owner: "weelh",
         repo: "weelh.github.io",
         oauth: {
